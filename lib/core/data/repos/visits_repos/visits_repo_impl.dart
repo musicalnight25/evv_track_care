@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:healthcare/config/data/dio/dio_client.dart';
 import 'package:healthcare/core/data/models/requests/profile_reqs/get_clients_details_req.dart';
@@ -281,6 +283,7 @@ class VisitsRepoImpl implements VisitsRepo {
         contentType: CType.json,
       );
 
+      log('res: $res');
       // Casting the response data to List<VisitDataResponse>
       //if (res.data != null && res.data is List) {
       final ClientResponse modelResponse = ClientResponse.fromJson(res.data ?? {});
@@ -289,12 +292,14 @@ class VisitsRepoImpl implements VisitsRepo {
       // } else {
       throw const ServerException("Invalid data format.");
       // }
-    } on ServerException catch (e) {
+    }
+    on ServerException catch (e) {
       // Re-throwing ServerException with its original message
       throw ServerException(e.message);
-    } catch (e) {
+    }
+    catch (e,st) {
       // Generic error handling with logging
-      print("Error: $e");
+      print("Error: $e---$st",);
       throw const ServerException("Something went wrong.");
     }
   }

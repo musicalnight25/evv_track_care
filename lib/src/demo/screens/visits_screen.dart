@@ -599,6 +599,62 @@ class _DemoScreenState extends State<DemoScreen> with AutomaticKeepAliveClientMi
                           ),
                         );
                       }),
+
+                /*  ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: visit.payerList.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            visit.selectClientPayerInfo(index, visit.payerList[index]);
+                            setState(() {});
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.w),
+                            child: Container(
+                              child: Row(
+                                children: [
+                                  Container(
+                                      width: 2.6.h,
+                                      height: 2.6.h,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(1.3.h),
+                                        border: Border.all(color: Colors.black),
+                                        color: AppColors.white,
+                                      ),
+                                      child: index == visit.selectedIndex
+                                          ? Padding(
+                                              padding: const EdgeInsets.all(4.0),
+                                              child: Container(
+                                                width: 1.2.h,
+                                                height: 1.2.h,
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(0.6.h),
+                                                  color: AppColors.Primary,
+                                                ),
+                                              ),
+                                            )
+                                          : const SizedBox()),
+                                  SizedBox(
+                                    width: 3.w,
+                                  ),
+                                  Flexible(
+                                    child: Txt(
+                                      visit.payerList[index].payerID ?? "",
+                                      fontSize: 2.2.t,
+                                      fontWeight: FontWeight.w400,
+                                      textColor: Colors.black,
+                                      overFlow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }),*/
+
                   SizedBox(
                     height: 1.h,
                   ),

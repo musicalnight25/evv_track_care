@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:healthcare/config/routes/app_router/route_extensions.dart';
 import 'package:healthcare/core/utils/gap.dart';
@@ -47,7 +49,16 @@ class TaskListSheet extends StatefulWidget {
 
 class _TaskListSheetState extends State<TaskListSheet> {
   List<String> selectedTask = [];
-  List<int> selectedIndex = [];
+  // List<int> selectedIndex = [];
+  int selectedIndex = -1;
+  String selectedTaskName = "";
+
+  selectName(int index, String select) async {
+    selectedIndex = index;
+    selectedTaskName = select;
+    setState(() {});
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +115,55 @@ class _TaskListSheetState extends State<TaskListSheet> {
                 itemBuilder: (context, index) {
                   final currentItem = widget.nameList[index];
                   final isDisabled = selectedTask.contains(currentItem);
-                  return CheckboxListTile(
+                  return GestureDetector(onTap: () {
+                    selectName(index, widget.nameList[index]);
+                    selectedTask.clear();
+                    selectedTask.add(widget.nameList[index]);
+                    log("Selected task ${widget.nameList[index]}");
+                  },
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.w),
+                      child: Row(
+                        children: [
+                          Container(
+                              width: 2.6.h,
+                              height: 2.6.h,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(1.3.h),
+                                border: Border.all(color: Colors.black),
+                                color: AppColors.white,
+                              ),
+                              child: index == selectedIndex
+                                  ? Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Container(
+                                  width: 1.2.h,
+                                  height: 1.2.h,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(0.6.h),
+                                    color: AppColors.Primary,
+                                  ),
+                                ),
+                              )
+                                  : const SizedBox()),
+                          SizedBox(
+                            width: 3.w,
+                          ),
+                          Flexible(
+                            child: Txt(
+                              widget.nameList[index] ?? "",
+                              fontSize: 2.2.t,
+                              fontWeight: FontWeight.w400,
+                              textColor: Colors.black,
+                              maxLines: 2,
+                              overFlow: TextOverflow.ellipsis,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                   /* CheckboxListTile(
                     onChanged: (e) {
                       if (selectedTask.contains(widget.nameList[index])) {
                         selectedTask.remove(widget.nameList[index]);
@@ -120,22 +179,31 @@ class _TaskListSheetState extends State<TaskListSheet> {
                       padding: EdgeInsets.symmetric(vertical: 1.h),
                       child: Txt(widget.nameList[index], fontSize: 2.t),
                     ),
-                  );
+                  );*/
                 },
               ),
             ),
             VGap(1.h),
             CustomElevatedButton(
               onTap: () async {
-                await visit.setSelectedTask(selectedTask);
+              /*
                 if (selectedTask.isNotEmpty) {
                  await visit.visitTaskAddApi(context, clientId: widget.clientId, companyId: widget.companyId.toString(), visitId: widget.visitId);
 
                 } else {
                   showToast("Please select at list one task.");
+                }*/
+
+
+                await visit.setSelectedTask(selectedTask);
+                if(selectedIndex != -1){
+                  await visit.visitTaskAddApi(context,
+                      clientId: widget.clientId,
+                      companyId: widget.companyId.toString(),
+                      visitId: widget.visitId);
+                }else {
+                  showToast("Please select at list one task.");
                 }
-
-
                 context.pop();
               },
               child: Row(

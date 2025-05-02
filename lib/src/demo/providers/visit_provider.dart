@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -8,6 +9,7 @@ import 'package:healthcare/core/data/models/requests/visits_reqs/client_visits_t
 import 'package:healthcare/core/data/models/requests/visits_reqs/start_visit_request.dart';
 import 'package:healthcare/core/data/models/requests/visits_reqs/task_list_request.dart';
 import 'package:healthcare/core/data/models/requests/visits_reqs/visits_request.dart';
+import 'package:healthcare/core/data/models/response/api_response/client_details_response.dart';
 import 'package:healthcare/core/data/models/response/api_response/client_visit_add_response.dart';
 import 'package:healthcare/core/data/models/response/api_response/send_signature_response.dart';
 import 'package:healthcare/core/data/repos/visits_repos/visits_repo.dart';
@@ -88,11 +90,24 @@ class DemoProvider extends ChangeNotifier {
   Service get selectedService => _selectedService;
   Service _selectedService = Service();
 
+  Payer get selectedPayerInfo => _selectedPayerInfo;
+  Payer _selectedPayerInfo = Payer();
+
+  List<Payer> get payerList => _payerList;
+  List<Payer> _payerList = [];
+
   /// Selected Service
 
   selectService(int index, Service select) async {
     _selectedIndex = index;
     _selectedService = select;
+    notifyListeners();
+  }
+
+  selectClientPayerInfo(int index, Payer select) async {
+    _selectedIndex = index;
+    _selectedPayerInfo = select;
+    log('_selectedPayerInfo: ${_selectedPayerInfo.toJson()}');
     notifyListeners();
   }
 
@@ -198,7 +213,11 @@ class DemoProvider extends ChangeNotifier {
   /// Visit Task Add Api
   ///
 
-  Future<bool> visitTaskAddApi(BuildContext context, {bool listen = true, String? visitId, String? companyId, String? clientId}) async {
+  Future<bool> visitTaskAddApi(BuildContext context,
+      {bool listen = true,
+      String? visitId,
+      String? companyId,
+      String? clientId}) async {
     bool isSuccess = false;
     try {
       final isNetwork = await _networkService.isConnected;
@@ -207,11 +226,19 @@ class DemoProvider extends ChangeNotifier {
         _selectedTaskNames.forEach((name) async {
           final item = _taskList.firstWhere((item) => item.taskName == name); // _taskList.map((task) => task.name as String).toList();
           int? id = item.serviceId;
+          log('id : ${item.toJson()}');
 
           print("Current Task id ${item.taskName}");
 
           final req = ClientVisitsTaskAddRequest(
-              visitId: visitId ?? "2", companyId: companyId ?? "2", clientId: clientId ?? "2", employeeId: employeeId ?? "", taskId: id.toString(), taskReading: name ?? "", taskRefused: "0");
+              visitId: visitId ?? "2",
+              companyId: companyId ?? "2",
+              clientId: clientId ?? "2",
+              employeeId: employeeId ?? "",
+              taskId: id.toString(),
+              taskReading: name ?? "",
+              taskRefused: "0");
+          log('req : ${req.toJson()}');
           final res = await _visitsRepo.ClientVisitTaskAdd(req);
           isSuccess = res.companyId != null;
           _visitTaskAddResponse = res;
@@ -249,12 +276,21 @@ class DemoProvider extends ChangeNotifier {
       final isNetwork = await _networkService.isConnected;
       final employeeId = _sp.getString(AppConsts.employeeId);
       if (isNetwork) {
-
+        log('companyId--?: $companyId');
+        log('clientId-->: $clientId');
 
         final req = GetClientsDetailsReq(companyId: companyId ?? "2", clientId: clientId ?? "2");
         final res = await _visitsRepo.ClientDetails(req);
 
         _payerId = res.client?.clientPayerInformations?.firstOrNull?.id.toString();
+
+        _payerList = res.payer ?? [];
+
+        if(_payerList.isNotEmpty){
+          selectClientPayerInfo(0, _payerList[0]);
+        }
+
+        log('_clientPayerInformationsList : $_payerList');
 
       } else {
         // showSnackbarError("No Internet Connection");
@@ -262,7 +298,7 @@ class DemoProvider extends ChangeNotifier {
         /// OR YOU CAN PERFORM OFFLINE ACTION SUCH AS OFFLINE DATA BASE
       }
     } on ServerException catch (e) {
-      devlogError("ERROR - PROVIDER - SERVERE_EXCEPTION -> adminLogin:2 $e");
+      devlogError("ERROR - PROVIDER - SERVERE_EXCEPTION -> adminLogin:2-======== $e");
       showSnackbar(e.message);
     } catch (e) {
       devlogError("ERROR - PROVIDER - CATCH_ERROR -> adminLogin adfg rghsf: $e");
@@ -338,10 +374,11 @@ class DemoProvider extends ChangeNotifier {
       final currTime = Formatter.stringFromDateTime(DateTime.now(), format: "yyyy-MM-dd HH:mm");
       final employeeId = _sp.getString(AppConsts.employeeId);
       print("Current Time $currTime");
+      log('selectedClientPayerInfo.payerID: ${selectedService.id}');
       final req = ClientVisitsAddRequest(
           clientId: clientId ?? 2,
           employeeId: int.tryParse(employeeId.toString()) ?? 1,
-          payerId: num.tryParse(_payerId ?? "1") ?? 1,
+          payerId: selectedService.id ?? 1,
           companyId: companyId ?? 2,
           visitOtherID: "23525",
           sequenceID: sequenceID ?? "2524524525",
@@ -350,8 +387,10 @@ class DemoProvider extends ChangeNotifier {
           // scheduleEndTime: endTime ?? "",
           contingencyPlan: "None",
           reschedule: 1,
-          adjInDateTime: currTime ?? "",
-          adjOutDateTime: currTime ?? "",
+          // adjInDateTime: currTime ?? "",
+          adjInDateTime: '',
+          adjOutDateTime: '',
+          // adjOutDateTime: currTime ?? "",
           hoursToBill: "5",
           hoursToPay: "4",
           visitCancelledIndicator: 1,
@@ -404,6 +443,7 @@ class DemoProvider extends ChangeNotifier {
         final req = TaskListRequest(companyid: int.parse(companyId ?? "0"), clientId: int.parse(clientId ?? "0"));
         final res = await _visitsRepo.TaskList(req);
         isSuccess = res != null;
+        log('res taskListApi: ${res.toJson()}');
         _taskList = res.taskLists;
 
         _taskNames = _taskList.map((task) => task.taskName as String).toList();
@@ -439,12 +479,14 @@ class DemoProvider extends ChangeNotifier {
     try {
       final isNetwork = await _networkService.isConnected;
       final companyId = _sp.getString(AppConsts.companyId);
+      log('isNetwork: $isNetwork');
       if (isNetwork) {
         final req = ServiceListRequest(companyId: int.parse(companyId!));
         final res = await _visitsRepo.getService(req);
         isSuccess = res != null;
         _serviceList = res.services ?? [];
-
+        log('_serviceList: ${res.services}');
+        log('_serviceList: $_serviceList');
       } else {
         _serviceList = context.read<HomeProvider>().offlineData?.services ?? [];
         // showSnackbarError("No Internet Connection");

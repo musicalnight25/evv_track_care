@@ -4,6 +4,8 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../../core/constants/api_constants.dart';
+
 class LoggingInterceptor extends InterceptorsWrapper {
 
   String truncateData(dynamic data) {
@@ -15,7 +17,7 @@ class LoggingInterceptor extends InterceptorsWrapper {
   Future onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     log(
       "-----------------🟧 REQUEST 🟧------------------------\n"
-          "[🟧 API PATH     ] : ${options.path} \n"
+          "[🟧 API PATH     ] : ${Apis.baseUrl}${options.path} \n"
           "[🟧 API METHOD   ] : ${options.method} \n"
           "[🟧 REQ DATA     ] : ${truncateData(options.data is FormData ? (options.data as FormData).fields : options.data)} \n"
           "[🟧 REQ HEADERS  ] : ${options.headers} \n"
@@ -28,7 +30,7 @@ class LoggingInterceptor extends InterceptorsWrapper {
       // ignore: avoid_print
       print(
         "-----------------[ REQUEST ]------------------------\n"
-            "[ API PATH     ] : ${options.path} \n"
+            "[ API PATH     ] : ${Apis.baseUrl}${options.path} \n"
             "[ API METHOD   ] : ${options.method} \n"
             "[ REQ DATA     ] : ${truncateData(options.data)} \n"
             "[ REQ HEADERS  ] : ${options.headers} \n"
@@ -43,7 +45,7 @@ class LoggingInterceptor extends InterceptorsWrapper {
   Future onResponse(Response response, ResponseInterceptorHandler handler) async {
     log(
       "-----------------🟩 RESPONSE 🟩------------------------\n"
-          "[🟩 RES PATH     ] : ${response.requestOptions.path} \n"
+          "[🟩 RES PATH     ] : ${Apis.baseUrl}${response.requestOptions.path} \n"
           "[🟩 RES STATUS   ] : ${response.statusCode} \n"
           "[🟩 RES DATA     ] : ${truncateData(response.data)} \n"
           "-----------------------------------------------------------------------------\n",
@@ -54,7 +56,7 @@ class LoggingInterceptor extends InterceptorsWrapper {
       // ignore: avoid_print
       print(
         "-----------------[ RESPONSE ]------------------------\n"
-            "[ RES PATH     ] : ${response.requestOptions.path} \n"
+            "[ RES PATH     ] : ${Apis.baseUrl}${response.requestOptions.path} \n"
             "[ RES STATUS   ] : ${response.statusCode} \n"
             "[ RES DATA     ] : ${truncateData(response.data)} \n"
             "-----------------------------------------------------------------------------\n",
@@ -69,7 +71,7 @@ class LoggingInterceptor extends InterceptorsWrapper {
     log(
       "-----------------🟥 ERROR 🟥------------------------\n"
           "[🟥 ERROR STATUS  ] : ${err.response?.statusCode} \n"
-          "[🟥 ERROR PATH    ] : ${err.requestOptions.path} \n"
+          "[🟥 ERROR PATH    ] : ${Apis.baseUrl}${err.requestOptions.path} \n"
           "[🟥 ERROR MESSAGE ] : ${truncateData(err.message)} \n"
           "[🟥 QUERY PARAMS  ] : ${err.requestOptions.queryParameters} \n"
           "[🟥 REQ HEADERS   ] : ${err.requestOptions.headers} \n"
@@ -82,7 +84,7 @@ class LoggingInterceptor extends InterceptorsWrapper {
       print(
         "-----------------[ ERROR ]------------------------\n"
             "[ ERROR STATUS  ] : ${err.response?.statusCode} \n"
-            "[ ERROR PATH    ] : ${err.requestOptions.path} \n"
+            "[ ERROR PATH    ] : ${Apis.baseUrl}${err.requestOptions.path} \n"
             "[ ERROR MESSAGE ] : ${truncateData(err.message)} \n"
             "[ REQ HEADERS   ] : ${err.requestOptions.headers} \n"
             "[ QUERY PARAMS  ] : ${err.requestOptions.queryParameters} \n"

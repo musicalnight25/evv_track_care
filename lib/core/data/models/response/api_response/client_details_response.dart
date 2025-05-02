@@ -2,7 +2,7 @@ class ClientResponse {
   final Client? client;
   final List<ClientPhone>? phone;
   final List<ClientAddress>? address;
-  final List<ClientPayerInformation>? payer;
+  final List<Payer>? payer;
 
   ClientResponse({
      this.client,
@@ -16,7 +16,7 @@ class ClientResponse {
       client: Client.fromJson(json['client']),
       phone: List<ClientPhone>.from(json['phone'].map((x) => ClientPhone.fromJson(x))),
       address: List<ClientAddress>.from(json['address'].map((x) => ClientAddress.fromJson(x))),
-      payer: List<ClientPayerInformation>.from(json['payer'].map((x) => ClientPayerInformation.fromJson(x))),
+      payer: json['payer'] == null && json['payer'].isEmpty ? [] : List<Payer>.from(json['payer'].map((x) => Payer.fromJson(x))),
     );
   }
 }
@@ -38,7 +38,7 @@ class Client {
   final String? clientOtherID;
   final String? clientTimezone;
   final String? coordinator;
-  final String? providerAssentContPlan;
+  final dynamic providerAssentContPlan;
   final String? avatar;
   final String? sandata;
   final DateTime? createdAt;
@@ -259,3 +259,23 @@ class ClientPayerInformation {
     );
   }
 }
+
+class Payer {
+  int? id;
+  String? payerID;
+
+  Payer({this.id, this.payerID});
+
+  Payer.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    payerID = json['PayerID'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['PayerID'] = this.payerID;
+    return data;
+  }
+}
+
