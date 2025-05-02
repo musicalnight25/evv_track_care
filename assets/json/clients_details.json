@@ -1,0 +1,242 @@
+[
+  {
+    "ClientID": "96641",
+    "ClientFirstName": "James",
+    "ClientMiddleInitial": "T",
+    "ClientLastName": "Smith",
+    "ClientQualifier": "ClientMedicaidID",
+    "ClientMedicaidID": "11111",
+    "VisitTime": {
+      "StartTime": "2024-10-10T22:54:20.000000Z",
+      "EndTime": "2024-10-10T22:54:20.000000Z"
+    },
+    "ClientAddress": [
+      {
+        "ClientAddressLongitude": -87.637856,
+        "ClientAddressLatitude": 41.921824
+      }
+    ],
+    "ClientPhone": [
+      {
+        "ClientPhoneType": "Home",
+        "ClientPhone": "1234567890"
+      }
+    ],
+    "Activity": [
+      {
+        "Toilet": {
+          "Title": "Toilet Time",
+          "Time" : "2024-10-10T22:54:20.000000Z",
+          "Status": true
+        },
+        "Showering": {
+          "Title": "Showering Time",
+          "Time" : "2024-10-10T22:54:20.000000Z",
+          "Status": false
+        },
+        "Dressing": {
+          "Title": "Dressing",
+          "Time" : "2024-10-10T22:54:20.000000Z",
+          "Status": true
+        },
+        "Hydration": {
+          "Title": "Hydration",
+          "Time" : "2024-10-10T22:54:20.000000Z",
+          "Status": true
+        }
+      }
+    ]
+  },
+  {
+    "ClientID": "96642",
+    "ClientFirstName": "Jennifer",
+    "ClientMiddleInitial": "J",
+    "ClientLastName": "Johnson",
+    "ClientQualifier": "ClientMedicaidID",
+    "ClientMedicaidID": "22222",
+    "VisitTime": {
+      "StartTime": "2024-10-10T22:54:20.000000Z",
+      "EndTime": "2024-10-10T22:54:20.000000Z"
+    },
+    "ClientAddress": [
+      {
+        "ClientAddressLongitude": -87.637856,
+        "ClientAddressLatitude": 41.921824
+      }
+    ],
+    "ClientPhone": [
+      {
+        "ClientPhoneType": "Home",
+        "ClientPhone": "1234567890"
+      }
+    ],
+    "Activity": [
+      {
+        "Toilet": {
+          "Title": "Toilet Time",
+          "Time" : "2024-10-10T22:54:20.000000Z",
+          "Status": true
+        },
+        "Showering": {
+          "Title": "Showering Time",
+          "Time" : "2024-10-10T22:54:20.000000Z",
+          "Status": false
+        },
+        "Dressing": {
+          "Title": "Dressing",
+          "Time" : "2024-10-10T22:54:20.000000Z",
+          "Status": true
+        },
+        "Hydration": {
+          "Title": "Hydration",
+          "Time" : "2024-10-10T22:54:20.000000Z",
+          "Status": true
+        }
+      }
+    ]
+  },
+  {
+    "ClientID": "96643",
+    "ClientFirstName": "Michael",
+    "ClientMiddleInitial": "M",
+    "ClientLastName": "Brown",
+    "ClientQualifier": "ClientMedicaidID",
+    "ClientMedicaidID": "33333",
+    "VisitTime": {
+      "StartTime": "2024-10-10T22:54:20.000000Z",
+      "EndTime": "2024-10-10T22:54:20.000000Z"
+    },
+    "ClientAddress": [
+      {
+        "ClientAddressLongitude": -87.637856,
+        "ClientAddressLatitude": 41.921824
+      }
+    ],
+    "ClientPhone": [
+      {
+        "ClientPhoneType": "Home",
+        "ClientPhone": "1234567890"
+      }
+    ],
+    "Activity": [
+      {
+        "Toilet": {
+          "Title": "Toilet Time",
+          "Time" : "2024-10-10T22:54:20.000000Z",
+          "Status": true
+        },
+        "Showering": {
+          "Title": "Showering Time",
+          "Time" : "2024-10-10T22:54:20.000000Z",
+          "Status": false
+        },
+        "Dressing": {
+          "Title": "Dressing",
+          "Time" : "2024-10-10T22:54:20.000000Z",
+          "Status": true
+        },
+        "Hydration": {
+          "Title": "Hydration",
+          "Time" : "2024-10-10T22:54:20.000000Z",
+          "Status": true
+        }
+      }
+    ]
+  },
+  {
+    "ClientID": "96644",
+    "ClientFirstName": "Emily",
+    "ClientMiddleInitial": "D",
+    "ClientLastName": "Davis",
+    "ClientQualifier": "ClientMedicaidID",
+    "ClientMedicaidID": "44444",
+    "VisitTime": {
+      "StartTime": "2024-10-10T22:54:20.000000Z",
+      "EndTime": "2024-10-10T22:54:20.000000Z"
+    },
+    "ClientAddress": [
+      {
+        "ClientAddressLongitude": -87.637856,
+        "ClientAddressLatitude": 41.921824
+      }
+    ],
+    "ClientPhone": [
+      {
+        "ClientPhoneType": "Home",
+        "ClientPhone": "1234567890"
+      }
+    ],
+    "Activity": [
+      {
+        "Toilet": {
+          "Title": "Toilet Time",
+          "Time" : "2024-10-10T22:54:20.000000Z",
+          "Status": true
+        },
+        "Showering": {
+          "Title": "Showering Time",
+          "Time" : "2024-10-10T22:54:20.000000Z",
+          "Status": false
+        },
+        "Dressing": {
+          "Title": "Dressing",
+          "Time" : "2024-10-10T22:54:20.000000Z",
+          "Status": true
+        },
+        "Hydration": {
+          "Title": "Hydration",
+          "Time" : "2024-10-10T22:54:20.000000Z",
+          "Status": true
+        }
+      }
+    ]
+  },
+  {
+    "ClientID": "96645",
+    "ClientFirstName": "William",
+    "ClientMiddleInitial": "L",
+    "ClientLastName": "Wilson",
+    "ClientQualifier": "ClientMedicaidID",
+    "ClientMedicaidID": "55555",
+    "VisitTime": {
+      "StartTime": "2024-10-10T22:54:20.000000Z",
+      "EndTime": "2024-10-10T22:54:20.000000Z"
+    },
+    "ClientAddress": [
+      {
+        "ClientAddressLongitude": -87.637856,
+        "ClientAddressLatitude": 41.921824
+      }
+    ],
+    "ClientPhone": [
+      {
+        "ClientPhoneType": "Home",
+        "ClientPhone": "1234567890"
+      }
+    ],
+    "Activity": [
+      {
+        "Toilet": {
+          "Title": "Toilet Time",
+          "Time" : "2024-10-10T22:54:20.000000Z",
+          "Status": true
+        },
+        "Showering": {
+          "Title": "Showering Time",
+          "Time" : "2024-10-10T22:54:20.000000Z",
+          "Status": false
+        },
+        "Dressing": {
+          "Title": "Dressing",
+          "Time" : "2024-10-10T22:54:20.000000Z",
+          "Status": true
+        },
+        "Hydration": {
+          "Title": "Hydration",
+          "Time" : "2024-10-10T22:54:20.000000Z",
+          "Status": true
+        }
+      }
+    ]
+  }
+]

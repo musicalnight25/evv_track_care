@@ -1,0 +1,78 @@
+name: healthcare
+description: "Health Care App"
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+
+### DEPENDENCIES ###
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.2
+  connectivity_plus: ^5.0.2
+  cached_network_image: ^3.3.1
+
+  dio: ^5.4.0
+
+  fluttertoast: ^8.2.4
+
+  get_it: ^7.6.4
+
+
+  intl: ^0.19.0
+  image_picker: ^1.0.5
+
+  provider: ^6.1.1
+
+  path_provider: ^2.1.1
+  permission_handler: ^11.1.0
+
+  shared_preferences: ^2.2.2
+  share_plus: ^10.1.2
+
+  url_launcher: ^6.2.2
+  url_strategy:
+
+  flutter_svg:
+  flutter_osm_plugin: ^1.3.5
+  geolocator: ^9.0.0
+  signature:
+  flutter_sound:
+  mime_type: ^1.0.0
+  http_parser:
+  audio_session:
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/fonts/
+    - assets/svg_icons/
+    - assets/json/client_data.json
+    - assets/json/clients_details.json
+
+  fonts:
+    - family: HurmeGeometricSans1
+      fonts:
+        - asset: assets/fonts/HurmeGeometricSans1/HurmeGeometricSans1-Black.otf
+        - asset: assets/fonts/HurmeGeometricSans1/HurmeGeometricSans1-Bold.otf
+#        - asset: assets/fonts/HurmeGeometricSans1/HurmeGeometricSans1-ExtraBold.otf
+#        - asset: assets/fonts/HurmeGeometricSans1/HurmeGeometricSans1-ExtraLight.otf
+#        - asset: assets/fonts/HurmeGeometricSans1/HurmeGeometricSans1-Italic.otf
+        - asset: assets/fonts/HurmeGeometricSans1/HurmeGeometricSans1-Light.otf
+#        - asset: assets/fonts/HurmeGeometricSans1/HurmeGeometricSans1-Medium.otf
+#        - asset: assets/fonts/HurmeGeometricSans1/HurmeGeometricSans1-Regular.otf
+        - asset: assets/fonts/HurmeGeometricSans1/HurmeGeometricSans1.otf
+        - asset: assets/fonts/HurmeGeometricSans1/HurmeGeometricSans1-SemiBold.otf
+        - asset: assets/fonts/HurmeGeometricSans1/HurmeGeometricSans1-Thin.otf

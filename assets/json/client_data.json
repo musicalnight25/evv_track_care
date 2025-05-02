@@ -1,0 +1,182 @@
+[
+  {
+    "ProviderIdentification": {
+      "ProviderQualifier": "MedicaidID",
+      "ProviderID": "1"
+    },
+    "ClientID": "96641",
+    "ClientFirstName": "James",
+    "ClientMiddleInitial": "T",
+    "ClientLastName": "Smith",
+    "ClientQualifier": "ClientMedicaidID",
+    "ClientMedicaidID": "11111",
+    "VisitTime": {
+      "StartTime" : "2024-10-10 22:54:20",
+      "EndTime" : "2024-10-10 22:54:20"
+    },
+    "ClientAddress": [
+      {
+        "ClientAddressType": "Home",
+        "ClientAddressIsPrimary": true,
+        "ClientAddressLine1": "456 Maple Avenue",
+        "ClientAddressLine2": "Unit 12",
+        "ClientCounty": "Cook",
+        "ClientCity": "Chicago",
+        "ClientState": "IL",
+        "ClientZip": "60614",
+        "ClientAddressLongitude": -87.637856,
+        "ClientAddressLatitude": 41.921824
+      }
+    ],
+    "ClientPhone": [
+      {
+        "ClientPhoneType": "Home",
+        "ClientPhone": "1234567890"
+      }
+    ]
+  },
+  {
+    "ProviderIdentification": {
+      "ProviderQualifier": "MedicaidID",
+      "ProviderID": "2"
+    },
+    "ClientID": "96642",
+    "ClientFirstName": "Jennifer",
+    "ClientMiddleInitial": "J",
+    "ClientLastName": "Johnson",
+    "ClientQualifier": "ClientMedicaidID",
+    "ClientMedicaidID": "22222",
+    "VisitTime": {
+      "StartTime" : "2024-10-10 22:54:20",
+      "EndTime" : "2024-10-10 22:54:20"
+    },
+    "ClientAddress": [
+      {
+        "ClientAddressType": "Home",
+        "ClientAddressIsPrimary": true,
+        "ClientAddressLine1": "789 Pine Street",
+        "ClientAddressLine2": "Floor 3",
+        "ClientCounty": "Harris",
+        "ClientCity": "Houston",
+        "ClientState": "TX",
+        "ClientZip": "77002",
+        "ClientAddressLongitude": -95.367568,
+        "ClientAddressLatitude": 29.763283
+      }
+    ],
+    "ClientPhone": [
+      {
+        "ClientPhoneType": "Home",
+        "ClientPhone": "1234567890"
+      }
+    ]
+  },
+  {
+    "ProviderIdentification": {
+      "ProviderQualifier": "MedicaidID",
+      "ProviderID": "3"
+    },
+    "ClientID": "96643",
+    "ClientFirstName": "Michael",
+    "ClientMiddleInitial": "M",
+    "ClientLastName": "Brown",
+    "ClientQualifier": "ClientMedicaidID",
+    "ClientMedicaidID": "33333",
+    "VisitTime": {
+      "StartTime" : "2024-10-10 22:54:20",
+      "EndTime" : "2024-10-10 22:54:20"
+    },
+    "ClientAddress": [
+      {
+        "ClientAddressType": "Home",
+        "ClientAddressIsPrimary": true,
+        "ClientAddressLine1": "321 Oak Drive",
+        "ClientAddressLine2": "",
+        "ClientCounty": "Miami-Dade",
+        "ClientCity": "Miami",
+        "ClientState": "FL",
+        "ClientZip": "33130",
+        "ClientAddressLongitude": -80.1918,
+        "ClientAddressLatitude": 25.7617
+      }
+    ],
+    "ClientPhone": [
+      {
+        "ClientPhoneType": "Home",
+        "ClientPhone": "1234567890"
+      }
+    ]
+  },
+  {
+    "ProviderIdentification": {
+      "ProviderQualifier": "MedicaidID",
+      "ProviderID": "4"
+    },
+    "ClientID": "96644",
+    "ClientFirstName": "Emily",
+    "ClientMiddleInitial": "D",
+    "ClientLastName": "Davis",
+    "ClientQualifier": "ClientMedicaidID",
+    "ClientMedicaidID": "44444",
+    "VisitTime": {
+      "StartTime" : "2024-10-10 22:54:20",
+      "EndTime" : "2024-10-10 22:54:20"
+    },
+    "ClientAddress": [
+      {
+        "ClientAddressType": "Home",
+        "ClientAddressIsPrimary": true,
+        "ClientAddressLine1": "36 West 5th Street",
+        "ClientAddressLine2": "10th Floor",
+        "ClientCounty": "Kings",
+        "ClientCity": "Manhattan",
+        "ClientState": "NY",
+        "ClientZip": "10017",
+        "ClientAddressLongitude": -73.4228741,
+        "ClientAddressLatitude": 40.7431032
+      }
+    ],
+    "ClientPhone": [
+      {
+        "ClientPhoneType": "Home",
+        "ClientPhone": "1234567890"
+      }
+    ]
+  },
+  {
+    "ProviderIdentification": {
+      "ProviderQualifier": "MedicaidID",
+      "ProviderID": "5"
+    },
+    "ClientID": "96645",
+    "ClientFirstName": "William",
+    "ClientMiddleInitial": "L",
+    "ClientLastName": "Wilson",
+    "ClientQualifier": "ClientMedicaidID",
+    "ClientMedicaidID": "55555",
+    "VisitTime": {
+      "StartTime" : "2024-10-10 22:54:20",
+      "EndTime" : "2024-10-10 22:54:20"
+    },
+    "ClientAddress": [
+      {
+        "ClientAddressType": "Home",
+        "ClientAddressIsPrimary": true,
+        "ClientAddressLine1": "123 Elm Street",
+        "ClientAddressLine2": "Apt 4B",
+        "ClientCounty": "Los Angeles",
+        "ClientCity": "Los Angeles",
+        "ClientState": "CA",
+        "ClientZip": "90001",
+        "ClientAddressLongitude": -118.2437,
+        "ClientAddressLatitude": 34.0522
+      }
+    ],
+    "ClientPhone": [
+      {
+        "ClientPhoneType": "Home",
+        "ClientPhone": "1234567890"
+      }
+    ]
+  }
+]
