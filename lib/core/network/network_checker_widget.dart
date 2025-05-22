@@ -30,7 +30,7 @@ class NetworkCheckerWidget extends StatelessWidget {
             Container(
                 padding: EdgeInsets.symmetric(vertical: 0.5.h),
                 color: AppColors.grey.shade800,
-                child: Center(child: Txt("No Internet Connection", textColor: Colors.white))),
+                child: const Center(child: Txt("No Internet Connection", textColor: Colors.white))),
           ],
         ),
       ) ,

@@ -1,7 +1,9 @@
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:healthcare/core/common/widgets/app_image_assets.dart';
 import 'package:healthcare/core/common/widgets/custom_image.dart';
 import 'package:healthcare/core/constants/color_constants.dart';
 import 'package:healthcare/core/utils/gap.dart';
@@ -55,28 +57,36 @@ class PatientInfoWidget extends StatelessWidget {
 
   Container buildContainer(ImageProvider<Object> image, BoxFit fit, Color? color) {
     return Container(
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(3.w), color: AppColors.home_card_color),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          color: AppColors.home_card_color),
       child: Padding(
         padding: EdgeInsets.all(4.w),
         child:Consumer<AuthProvider>(builder: (context, auth,_)  {
             return Row(
               children: [
-                CustomImage(
-                 url: imageUrl  != "" ? "${auth.getImageBaseUrl().toString()}/images/avatars/$imageUrl" : "${auth.getImageBaseUrl().toString()}/avatars.jpg",height: 10.h,width: 10.h,fit: BoxFit.fill,
-                ),
+              CustomImage(
+                url: imageUrl != ""
+                    ? "${auth.getImageBaseUrl().toString()}/images/avatars/$imageUrl"
+                    : "${auth.getImageBaseUrl().toString()}/avatars.jpg",
+                height: 68,
+                width: 68,
+                fit: BoxFit.fill,
+              ),
               /*  Image.asset(
                   AppImages.ic_demo_img,
                   height: 10.h,
                   width: 10.h,
                   fit: BoxFit.fill,
                 ),*/
-                HGap(2.w),
+                HGap(4.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Txt(name ?? "", fontSize: 2.1.t, fontWeight: FontWeight.w500),
+                      Txt(name ?? "", fontSize: 16, fontWeight: FontWeight.w400,
+                      textColor: AppColors.black,),
                       VGap(0.5.h),
                     /*  Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,21 +103,34 @@ class PatientInfoWidget extends StatelessWidget {
                       ),
                       VGap(0.5.h),*/
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Icon(
-                            Icons.location_on_outlined,
-                            color: AppColors.theme,
-                            size: 2.5.h,
-                          ),
-                          HGap(1.w),
-                          Expanded(child: Txt(address == "null,null,null,null,null" ? "--" : address ?? "",maxLines: 3, fontSize: 1.7.t, textColor: AppColors.hint_text_color_dark, fontWeight: FontWeight.w400,overFlow: TextOverflow.ellipsis,)),
-                        ],
-                      )
-                    ],
-                  ),
+                         const Padding(
+                           padding: EdgeInsets.only(top: 2),
+                           child: AppImageAsset(image: AppIcons.ic_location),
+                         ),
+                        HGap(1.w),
+                        Expanded(
+                            child: Txt(
+                              textAlign: TextAlign.start,
+                          address == "null,null,null,null,null"
+                              ? "--"
+                              : address ?? "",
+                          maxLines: 3,
+                          fontSize: 13,
+                          textColor: AppColors.hint_text_color_dark,
+                          fontWeight: FontWeight.w400,
+                          overFlow: TextOverflow.ellipsis,
+                        )),
+                      ],
+                    )
+                  ],
+                ),
                 ),
 
-                Column(
+               const AppImageAsset(image:AppIcons.ic_more_icon,height: 25,)
+               /* Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(3, (i) {
                       return Container(
@@ -119,7 +142,7 @@ class PatientInfoWidget extends StatelessWidget {
                         ),
                         margin: EdgeInsets.symmetric(vertical: 1.h),
                       );
-                    }))
+                    }))*/
               ],
             );
           }

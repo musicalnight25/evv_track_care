@@ -1,13 +1,15 @@
 class LoginReq {
   final String email;
   final String password;
+  final bool? isRememberMe;
 
-  LoginReq({required this.email, required this.password});
+  LoginReq({required this.email, required this.password,this.isRememberMe = false});
 
   /// toJson METHOD USE TO PASS DATA IN API CALL AS JSON FORMAT
   Map<String, dynamic> toJson() => {
         'email': email,
         'password': password,
+        'is_remember': isRememberMe,
       };
 
   /// CREATE toFormData() METHOD HERE IF YOUR REQUEST CONTAINS FILE

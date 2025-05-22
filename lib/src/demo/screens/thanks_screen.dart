@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:healthcare/config/routes/app_router/route_extensions.dart';
+import 'package:healthcare/core/common/widgets/app_image_assets.dart';
+import 'package:healthcare/core/constants/color_constants.dart';
 import 'package:healthcare/core/constants/image_constants.dart';
 import 'package:healthcare/core/utils/size_config.dart';
 
@@ -90,64 +92,74 @@ class _ThanksScreen extends State<ThanksScreen> {
         backgroundColor: Colors.white,
         body: SafeArea(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Spacer(),
-              Center(
-                  child: Image.asset(
-                AppImages.success,
-                scale: 0.2.h,
-              )),
-              Txt(
-                "Thank You!",
-                fontWeight: FontWeight.bold,
-                fontSize: 5.t,
-              ),
-              Txt(
-                "Your visit is complete.",
-                textAlign: TextAlign.center,
-                fontWeight: FontWeight.bold,
-                fontSize: 2.2.t,
-              ),
-              Txt(
-                "Please hand the device",
-                textAlign: TextAlign.center,
-                fontWeight: FontWeight.bold,
-                fontSize: 2.2.t,
-              ),
-              Txt(
-                "back to your caregiver.",
-                textAlign: TextAlign.center,
-                fontWeight: FontWeight.bold,
-                fontSize: 2.2.t,
-              ),
-              VGap(5.h),
-              Padding(
-                padding: EdgeInsets.all(1.8.h),
-                child: Row(
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 30),
+                decoration: BoxDecoration(
+                  color: AppColors.bgColor,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: AppColors.lightSeaGreen,width: 0.7)
+                ),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CustomElevatedButton(
-                      onTap: () async {
-                        context.popUntil((route) => route.settings.name == Routes.demo.path);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Txt(
-                          "Done",
-                          textAlign: TextAlign.center,
-                          fontWeight: FontWeight.w600,
-                          textColor: Colors.white,
-                          fontSize: 2.2.t,
+                    SizedBox(height: 50,),
+                    Center(
+                        child: AppImageAsset(
+                      image: AppIcons.ic_sucess,
+                          height: 94,
+                          width: 94,
+                    )),
+                    SizedBox(height: 30,),
+                    const AppImageAsset(
+                        image: AppIcons.ic_thankYou,
+                        height: 60,
+                        fit: BoxFit.fill),
+                    SizedBox(height: 30,),
+                    Txt(
+                      "Your visit is complete.",
+                      textAlign: TextAlign.center,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16,
+                    ),
+                    Txt(
+                      "Please hand the device",
+                      textAlign: TextAlign.center,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16,
+                    ),
+                    Txt(
+                      "back to your caregiver.",
+                      textAlign: TextAlign.center,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16,
+                    ),
+                    VGap(5.h),
+                    Padding(
+                      padding: EdgeInsets.all(1.8.h),
+                      child: CustomElevatedButton(
+                        width: 109,
+                        height: 48,
+                        onTap: () async {
+                          context.popUntil((route) => route.settings.name == Routes.demo.path);
+                        },
+                        child: Center(
+                          child: Txt(
+                            "DONE",
+                            textAlign: TextAlign.center,
+                            fontWeight: FontWeight.w600,
+                            textColor: Colors.white,
+                            fontSize: 14,
+                          ),
                         ),
                       ),
-                    )
+                    ),
+                    SizedBox(height: 40,),
                   ],
                 ),
               ),
-              const Spacer(),
             ],
           ),
         ),

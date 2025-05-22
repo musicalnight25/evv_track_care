@@ -1,8 +1,11 @@
 class Apis {
   // static const baseUrl = "https://caretrack.i-mbu.app/";
-  // static const baseUrl = "https://staging.evv-caretrack.app";
-  static const baseUrl = "https://caretrack.i-mbu.app";
-  // static const baseUrl = "https://prod.evv-caretrack.app/";
+  static const baseUrl = "https://staging.evv-caretrack.app";
+  // static const baseUrl = "https://caretrack.i-mbu.app";
+  // static const baseUrl = "https://prod.evv-caretrack.app";
+
+  static String playStoreLink = 'https://play.google.com/store/apps/details?id=com.imbu.caretrack';
+  static String appStoreLink = 'https://apps.apple.com/in/app/id6738275809';
 
 
   static const name = "api";

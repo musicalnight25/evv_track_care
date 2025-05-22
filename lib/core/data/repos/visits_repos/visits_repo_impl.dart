@@ -117,7 +117,7 @@ class VisitsRepoImpl implements VisitsRepo {
         data: req.toJson(),
         contentType: CType.json,
       );
-
+      log('res0---->: ${res.data['services'].length}');
       // Casting the response data to List<VisitDataResponse>
 
       final TaskListsResponse modelResponse = TaskListsResponse.fromJson(res.data ?? {});

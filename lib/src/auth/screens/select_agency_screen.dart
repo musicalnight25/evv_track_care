@@ -1,6 +1,8 @@
 
+import 'package:flutter/services.dart';
 import 'package:healthcare/config/routes/app_router/route_extensions.dart';
 import 'package:healthcare/config/routes/app_router/route_params.dart';
+import 'package:healthcare/core/common/widgets/app_image_assets.dart';
 import 'package:healthcare/core/constants/app_constants.dart';
 import 'package:healthcare/core/constants/color_constants.dart';
 import 'package:healthcare/core/constants/image_constants.dart';
@@ -69,17 +71,15 @@ class _SelectAgencyScreenState extends State<SelectAgencyScreen> with AutomaticK
               // crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 VGap(6.h),
-                Center(
-                    child: SvgImage(
-                  SvgIcons.logo_svg,
-                  fit: BoxFit.fitHeight,
-                  size: 1.h,
-                )),
+                const AppImageAsset(image: AppIcons.logoSvg,
+                height: 36,
+                  width: 139,
+                ),
                 VGap(3.h),
-                Txt(
+                const Txt(
                   "Select Your Agency",
-                  fontWeight: FontWeight.bold,
-                  fontSize: 2.2.t,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
                 ),
                 VGap(3.h),
                 Expanded(
@@ -88,9 +88,9 @@ class _SelectAgencyScreenState extends State<SelectAgencyScreen> with AutomaticK
                     child: GridView.builder(
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2, // Number of columns
-                        childAspectRatio: 0.95, // Adjust item height
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
+                        childAspectRatio: 0.98, // Adjust item height
+                        crossAxisSpacing: 15,
+                        mainAxisSpacing: 15,
                       ),
                       itemCount: auth.companies.length,
                       itemBuilder: (context, index) {
@@ -100,35 +100,40 @@ class _SelectAgencyScreenState extends State<SelectAgencyScreen> with AutomaticK
                             auth.selectedIndex = index;
                             auth.notify();
                           },
-                          child: Card(
-                            elevation: 2,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10), side: BorderSide(color: index == auth.selectedIndex ? AppColors.Primary : Colors.white, width: 2)),
+                          child: Container(
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: AppColors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                border: Border.all(
+                                    color: index == auth.selectedIndex
+                                        ? AppColors.lightSeaGreen
+                                        : Colors.white,
+                                    width: 1)
+                            ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
+                              // crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                AspectRatio(
-                                  aspectRatio: 1.6,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Image.network(
-                                      item.logo != null ? "${auth.getImageBaseUrl().toString()}/images/logo/${item.logo}" : AppConsts.staticLogo,
-                                    ),
-                                  ),
+                                AppImageAsset(
+                                  image: item.logo != null
+                                      ? "${auth.getImageBaseUrl().toString()}/images/logo/${item.logo}"
+                                      : AppConsts.staticLogo,
+                                  height: 64,
+                                  width: 64,
                                 ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                    child: Text(
-                                      item.name,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center,
-                                    ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  item.name,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    letterSpacing: -0.3
                                   ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
                                 ),
                               ],
                             ),
@@ -154,9 +159,9 @@ class _SelectAgencyScreenState extends State<SelectAgencyScreen> with AutomaticK
                         },
                         child: Padding(
                           padding: EdgeInsets.symmetric(vertical: 1.h),
-                          child: Txt(
+                          child: const Txt(
                             "Continue",
-                            fontSize: 1.7.t,
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
                             textColor: Colors.white,
                             textAlign: TextAlign.center,

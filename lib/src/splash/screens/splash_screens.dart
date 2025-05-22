@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart';
+import 'package:healthcare/core/common/widgets/app_image_assets.dart';
 import 'package:healthcare/core/constants/app_constants.dart';
 import 'package:healthcare/core/utils/gap.dart';
 import 'package:healthcare/core/utils/size_config.dart';
@@ -9,6 +11,7 @@ import 'package:provider/provider.dart';
 import '../../../core/common/widgets/svg_image.dart';
 import '../../../core/constants/color_constants.dart';
 import '../../../core/constants/image_constants.dart';
+import '../../../core/helper/remote_config_helper.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../auth/screens/login_screen.dart';
 
@@ -40,8 +43,9 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 2), () async {
-
-
+      await Future.delayed(Duration.zero,() {
+        RemoteConfigService.instance.getAppUpdateInfo(context);
+      },);
       await Provider.of<AuthProvider>(context, listen: false).skipScreen(context);
       /// TOKEN BASED LOGIN
     //    isToken ? context.pushNamedAndRemoveUntil(AppScaffoldRoute(), (route) => false) :  context.pushNamedAndRemoveUntil(LoginRoute(), (route) => false);
@@ -53,13 +57,19 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.dark.copyWith(statusBarColor: AppColors.bgColor),
+      child: Scaffold(
+        body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           // mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Row(
+             AppImageAsset(image: AppImages.imgSplash,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+               fit: BoxFit.cover,
+            ),
+        /*    Row(
               children: [
                 VGap(2.h),
               ],
@@ -197,7 +207,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           )))
                 ],
               ),
-            ),
+            ),*/
           ],
         ),
       ),

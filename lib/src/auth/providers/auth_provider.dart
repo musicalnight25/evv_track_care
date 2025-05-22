@@ -8,6 +8,7 @@ import 'package:healthcare/core/constants/app_constants.dart';
 import 'package:healthcare/core/data/models/requests/auth_reqs/agency_req.dart';
 import 'package:healthcare/core/data/models/requests/auth_reqs/login_req.dart';
 import 'package:healthcare/core/data/repos/auth_repos/auth_repo.dart';
+import 'package:healthcare/core/helper/remote_config_helper.dart';
 import 'package:healthcare/core/network/network_checker_widget.dart';
 import 'package:healthcare/core/network/network_service.dart';
 import 'package:healthcare/src/home/screens/home_screen.dart';
@@ -69,17 +70,18 @@ class AuthProvider extends ChangeNotifier {
   /// LOGIN FOR USER
   ///
 
-  Future<bool> userLogin(BuildContext context,{required String email, required String password, bool listen = true}) async {
+  Future<bool> userLogin(BuildContext context,{required String email, required String password, bool listen = true,bool isRememberMe = false}) async {
     bool isSuccess = false;
     try {
       final isNetwork = await _networkService.isConnected;
       if (isNetwork) {
-        final req = LoginReq(email: email, password: password);
+        final req = LoginReq(email: email, password: password,isRememberMe: isRememberMe);
         final res = await _authRepo.userLogin(req);
-        isSuccess = res.companyId != null;
-        await _sp.setString(AppConsts.employeeId, res.id.toString());
-        print("get base Url ${res.baseUrl.toString()}");
-        await _sp.setString(AppConsts.imgBaseUrl, res.baseUrl.toString());
+        log('res: ${res.toJson()}');
+        isSuccess = res.data?.companyId != null;
+        await _sp.setString(AppConsts.employeeId, res.data!.id!.toString());
+        // print("get base Url ${res.data!.baseUrl!.toString()}");
+        // await _sp.setString(AppConsts.imgBaseUrl, res.baseUrl.toString());
         await storeToken();
         // await  skipScreen(context);
         //await getAgency();
@@ -112,7 +114,6 @@ class AuthProvider extends ChangeNotifier {
     // isToken
     //     ?_companies.length == 1 ? context.pushNamedAndRemoveUntil(HomeRoute(), (route) => false): context.pushNamedAndRemoveUntil(SelectAgencyRoute(), (route) => false)
     //     :  context.pushNamedAndRemoveUntil(LoginRoute(), (route) => false);
-
     if (isToken) {
       if (context.isConnected) {
         await Provider.of<AuthProvider>(context, listen: false).getAgency();
@@ -126,7 +127,8 @@ class AuthProvider extends ChangeNotifier {
         if (isCompanySelected) {
           await context.pushNamedAndRemoveUntil(const HomeRoute(), (route) => false);
         } else {
-          await context.pushNamedAndRemoveUntil(CustomRoute(routename: Routes.demo2, page: NoInternetWdget(), transition: TransitionType.fade), (route) => false);
+          await context.pushNamedAndRemoveUntil(const SelectAgencyRoute(), (route) => false);
+           // await context.pushNamedAndRemoveUntil(CustomRoute(routename: Routes.demo2, page: NoInternetWdget(), transition: TransitionType.fade), (route) => false);
         }
       }
     } else {

@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:core';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:healthcare/config/routes/app_router/route_extensions.dart';
 import 'package:healthcare/config/routes/app_router/route_params.dart';
+import 'package:healthcare/core/common/widgets/app_image_assets.dart';
 import 'package:healthcare/core/constants/app_constants.dart';
 import 'package:healthcare/core/data/models/requests/visits_reqs/clients_list_response.dart';
 import 'package:healthcare/core/network/network_checker_widget.dart';
@@ -26,6 +28,7 @@ import '../../../core/constants/image_constants.dart';
 import '../../../core/data/models/response/clients_list_response.dart';
 import '../../../core/helper/formatter.dart';
 import '../../../core/helper/loader.dart';
+import '../../auth/screens/select_agency_screen.dart';
 import '../../details/screen/patient_details_screen.dart';
 import '../../map_screen/screens/map_screen.dart';
 import '../widgets/visits_info_widget.dart';
@@ -106,417 +109,481 @@ class _DemoScreenState extends State<DemoScreen> with AutomaticKeepAliveClientMi
     super.build(context);
     return NetworkCheckerWidget(
       child: Consumer2<DemoProvider, HomeProvider>(builder: (context, visit, home, _) {
-        return Scaffold(
-          //   backgroundColor: Colors.white,
-          body: SafeArea(
-            child: Stack(
-              children: [
-                Column(
-                  children: [
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 8.0, left: 4),
-                            child: Icon(
-                              Icons.arrow_back,
-                              size: 3.h,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 2.w,
-                        ),
-                        Padding(
-                            padding: const EdgeInsets.only(top: 8.0, left: 8),
-                            child: SvgImage(
-                              SvgIcons.logo_svg,
-                              fit: BoxFit.fitHeight,
-                              size: 0.7.h,
-                            )),
-                        const Spacer(),
-                        Padding(
-                          padding: EdgeInsets.only(right: 2.w),
-                          child: GestureDetector(
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle.dark.copyWith(statusBarColor: AppColors.white),
+          child: Scaffold(
+            backgroundColor: Colors.white,
+            body: SafeArea(
+              child: Stack(
+                children: [
+                  Column(
+                    children: [
+                      const SizedBox(height: 15,),
+                      Row(
+                        children: [
+                          GestureDetector(
                             onTap: () {
-                              context.popUntil((route) => route.settings.name == Routes.home.path);
+                              Navigator.pop(context);
                             },
                             child: Padding(
-                              padding: EdgeInsets.only(right: 1.w),
+                              padding: const EdgeInsets.only(top: 8.0, left: 16),
                               child: Icon(
-                                Icons.home_filled,
+                                Icons.arrow_back,
                                 size: 3.h,
-                                color: AppColors.Primary,
                               ),
                             ),
                           ),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: 1.5.h,
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Txt(
-                          "Agency : ",
-                          fontSize: 2.t,
-                          fontWeight: FontWeight.w600,
+                          SizedBox(
+                            width: 2.w,
+                          ),
+                          const Padding(
+                              padding: EdgeInsets.only(top: 8.0, left: 8),
+                              child: AppImageAsset(
+                                image: AppIcons.logoSvg,
+                                height: 26,
+                                width: 98,
+                              ),),
+                          const Spacer(),
+                          Padding(
+                            padding: EdgeInsets.only(right: 16),
+                            child: GestureDetector(
+                              onTap: () {
+                                context.popUntil((route) => route.settings.name == Routes.home.path);
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.only(right: 1.w),
+                                child: AppImageAsset(image: AppIcons.ic_home)
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 1.7.h,
+                      ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        padding: const EdgeInsets.symmetric(vertical: 14,horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: AppColors.bgColor,
+                          borderRadius: BorderRadius.circular(9),
                         ),
-                        Txt(
-                          home.companyName ?? "",
-                          fontSize: 2.t,
-                          fontWeight: FontWeight.w500,
-                          textColor: Colors.black,
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: 1.5.h,
-                    ),
-                    SizedBox(
-                      height: 4.h,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 60,
-                        itemBuilder: (context, index) {
-                          DateTime date = startDate.add(Duration(days: index));
-                          bool isSelected = date.day == visit.selectedDate.day && date.month == visit.selectedDate.month && date.year == visit.selectedDate.year;
-                          bool isToday = date.day == DateTime.now().day && date.month == DateTime.now().month && date.year == DateTime.now().year;
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            const Txt(
+                              "Agency : ",
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                            ),
+                            Expanded(
+                              child: Txt(
+                                home.companyName ?? "",
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                textColor: Colors.black,
+                                maxLines: 1,
+                                overFlow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            SizedBox(width: 5.w),
+                            Column(
+                              children: [
+                                InkWell(
+                                    onTap: () {
+                                      // if (context.isConnected) {
+                                      //   context.pushNamedAndRemoveUntil(const SelectAgencyRoute(), (r) => false);
+                                      // } else {
+                                      //   showSnackbarError("No Internet Connection.!");
+                                      // }
+                                    },
+                                    child: const AppImageAsset(image: AppIcons.ic_more,
+                                      height: 15,
+                                      width: 10,
+                                      fit: BoxFit.contain,
+                                    )
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                /*      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Txt(
+                            "Agency : ",
+                            fontSize: 2.t,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          Txt(
+                            home.companyName ?? "",
+                            fontSize: 2.t,
+                            fontWeight: FontWeight.w500,
+                            textColor: Colors.black,
+                          )
+                        ],
+                      ),*/
+                      SizedBox(
+                        height: 1.5.h,
+                      ),
+                      SizedBox(
+                        height: 34,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 60,
+                          itemBuilder: (context, index) {
+                            DateTime date = startDate.add(Duration(days: index));
+                            bool isSelected = date.day == visit.selectedDate.day && date.month == visit.selectedDate.month && date.year == visit.selectedDate.year;
+                            bool isToday = date.day == DateTime.now().day && date.month == DateTime.now().month && date.year == DateTime.now().year;
 
-                          return GestureDetector(
-                            onTap: () async {
-                              visit.setSelectedDate(date);
+                            return GestureDetector(
+                              onTap: () async {
+                                visit.setSelectedDate(date);
 
-                              print("Selected Date ${visit.selectedDate}");
-                              setState(() {});
+                                print("Selected Date ${visit.selectedDate}");
+                                setState(() {});
 
-                              await Provider.of<DemoProvider>(context, listen: false).getDataDateWise(visit.selectedDate.toString());
-                            },
-                            child: isSelected
-                                ? Container(
-                                    decoration: BoxDecoration(
-                                      color: isSelected ? AppColors.theme : Colors.transparent,
-                                      borderRadius: BorderRadius.circular(2.w),
-                                      border: Border.all(
-                                        color: isSelected ? AppColors.theme : Colors.grey,
+                                await Provider.of<DemoProvider>(context, listen: false).getDataDateWise(visit.selectedDate.toString());
+                              },
+                              child: isSelected
+                                  ? Container(
+                                alignment: Alignment.center,
+                                height: 24,
+                                      decoration: BoxDecoration(
+                                        color: isSelected ? AppColors.theme : Colors.transparent,
+                                        borderRadius: BorderRadius.circular(6),
+                                        border: Border.all(
+                                          color: isSelected ? AppColors.theme : Colors.grey,
+                                        ),
                                       ),
-                                    ),
-                                    child: Center(
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 2.w),
-                                        child: Row(
+                                      child: Center(
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 2.w),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              isToday
+                                                  ? const Txt(
+                                                      "Today",
+                                                      textColor: Colors.white,
+                                                fontSize: 14,
+                                                    )
+                                                  : const SizedBox(),
+                                              SizedBox(width: 2.w),
+                                              Text(
+                                                DateFormat('d').format(date),
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontFamily: HurmeGeometricSans1,
+                                                  color: isSelected ? AppColors.white : AppColors.appBlack,
+                                                ),
+                                              ),
+                                              SizedBox(width: 2.w),
+                                              Text(
+                                                DateFormat('MMMM').format(date),
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontFamily: HurmeGeometricSans1,
+                                                  color: isSelected ? AppColors.white : AppColors.appBlack,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : SizedBox(
+                                      width: 45,
+                                      child: Center(
+                                        child: Column(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            isToday
-                                                ? const Txt(
-                                                    "Today",
-                                                    textColor: Colors.white,
-                                                  )
-                                                : const SizedBox(),
-                                            SizedBox(width: 2.w),
                                             Text(
                                               DateFormat('d').format(date),
                                               style: TextStyle(
-                                                fontSize: 1.6.t,
-                                                color: isSelected ? Colors.white : Colors.black,
-                                              ),
-                                            ),
-                                            SizedBox(width: 2.w),
-                                            Text(
-                                              DateFormat('MMMM').format(date),
-                                              style: TextStyle(
-                                                fontSize: 1.6.t,
-                                                color: isSelected ? Colors.white : Colors.grey,
+                                                fontSize: 14,
+                                                fontFamily: HurmeGeometricSans1,
+                                                color: isSelected ? Colors.white : AppColors.appBlack,
                                               ),
                                             ),
                                           ],
                                         ),
                                       ),
                                     ),
-                                  )
-                                : SizedBox(
-                                    width: 70,
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            DateFormat('d').format(date),
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              color: isSelected ? Colors.white : Colors.black,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                    Txt(
-                      "Visits List",
-                      fontSize: 2.2.t,
-                      fontWeight: FontWeight.bold,
-                    ),
-
-                    Visibility(
-                      visible: visit.visitData.isNotEmpty,
-                      child: Expanded(
+                      SizedBox(
+                        height: 2.5.h,
+                      ),
+                      const Txt(
+                        "Visit List",
+                        fontWeight: FontWeight.w400,
+                        fontSize: 17,
+                        textColor: AppColors.black,
+                      ),
+                      const SizedBox(height: 5),
+                      Expanded(
                         child: SingleChildScrollView(
                           child: Column(
                             children: [
-                              ...List.generate(
-                                  visit.visitData.length,
-                                  (index) => Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.8.h),
-                                        child: GestureDetector(
-                                            onTap: () async {
-                                              showLoader(context);
-                                              await Future.delayed(const Duration(milliseconds: 300));
-                                              hideLoader();
-                                              await context.pushNamed(PatientDetailsScreenRoute(
-                                                  id: visit.visitData[index].id.toString(),
-                                                  clientId: widget.params.id,
-                                                  companyId: widget.params.client?.companyId.toString() ?? "",
-                                                  name: widget.params.name,
-                                                  startTime: visit.visitData[index].scheduleStartTime.toString(),
-                                                  endTime: visit.visitData[index].scheduleEndTime?.toString() ?? "",
-                                                  clientListResponse: ClientListResponse(),
-                                                  status: visit.visitData[index].status == "completed",
-                                                  imageUrl: widget.params.avatar ?? ""));
-                                              //  await context.pushNamed(PatientDetailsScreenRoute(id:clientData[index].clientID ) );
-                                            },
-                                            child: VisitsInfoWidget(
-                                              name: widget.params.name ?? "",
-                                              imageUrl: widget.params.avatar ?? "",
-                                              startTime: visit.visitData[index].scheduleStartTime.toString() ?? "",
-                                              endTime: visit.visitData[index].scheduleEndTime?.toString() ?? "",
-                                              location: widget.params.location.toString() ?? "",
-                                              status: visit.visitData[index].status.toString() ?? "",
-                                            )),
-                                      )),
-                              SizedBox(height: 10.h),
+                              if(visit.visitData.isNotEmpty)...[
+                                ...List.generate(
+                                    visit.visitData.length,
+                                        (index) => Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.8.h),
+                                      child: GestureDetector(
+                                          onTap: () async {
+                                            showLoader(context);
+                                            await Future.delayed(const Duration(milliseconds: 300));
+                                            hideLoader();
+                                            log('visit.visitData[index].id.toString() ${visit.visitData[index].toJson()}');
+                                            await context.pushNamed(PatientDetailsScreenRoute(
+                                                id: visit.visitData[index].id.toString(),
+                                                clientId: widget.params.id,
+                                                companyId: widget.params.client?.companyId.toString() ?? "",
+                                                name: widget.params.name,
+                                                // startTime: visit.visitData[index].scheduleStartTime.toString(),
+                                                // endTime: visit.visitData[index].scheduleEndTime?.toString() ?? "",
+                                                startTime: visit.visitData[index].adjInDateTime.toString(),
+                                                endTime: visit.visitData[index].adjOutDateTime?.toString() ?? "",
+                                                clientListResponse: ClientListResponse(),
+                                                status: visit.visitData[index].status == "completed",
+                                                imageUrl: widget.params.avatar ?? ""));
+                                            //  await context.pushNamed(PatientDetailsScreenRoute(id:clientData[index].clientID ) );
+                                          },
+                                          child: Stack(
+                                            children: [
+                                              VisitsInfoWidget(
+                                                name: widget.params.name ?? "",
+                                                imageUrl: widget.params.avatar ?? "",
+                                                startTime: visit.visitData[index].scheduleStartTime.toString() ?? "",
+                                                endTime: visit.visitData[index].scheduleEndTime?.toString() ?? "",
+                                                location: widget.params.location.toString() ?? "",
+                                                status: visit.visitData[index].status.toString() ?? "",
+                                              ),
+                                              // Text('${visit.visitData[index].scheduleStartTime}')
+                                            ],
+                                          )),
+                                    )),
+                                SizedBox(height: 10.h),
+                              ]
+                              else...[
+                                Padding(
+                                  padding: EdgeInsets.only(top: 13.h, right: 10.w, left: 10.w),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(AppIcons.ic_no_data, scale: 0.1),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 2.h, right: 10.w, left: 10.w),
+                                        child: Txt(
+                                          "You do not have any visits on this day",
+                                          fontSize: 2.5.t,
+                                          fontWeight: FontWeight.bold,
+                                          textAlign: TextAlign.center,
+                                          textColor: AppColors.Primary,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 2.h,
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          selectServiceBottomSheet(context, visit);
+                                          //  showDateTimeBottomSheet(context, visit);
+                                        },
+                                        child: Txt(
+                                          "Add Visit",
+                                          fontSize: 1.8.t,
+                                          fontWeight: FontWeight.bold,
+                                          textColor: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ]
                             ],
                           ),
                         ),
                       ),
-                    ),
-
-                    Visibility(
-                      visible: visit.visitData.isEmpty,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 13.h, right: 10.w, left: 10.w),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
+                      Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Row(
                           children: [
-                            Image.asset(AppIcons.ic_no_data, scale: 0.1),
                             Padding(
-                              padding: EdgeInsets.only(top: 2.h, right: 10.w, left: 10.w),
-                              child: Txt(
-                                "You do not have any visits on this day",
-                                fontSize: 2.5.t,
-                                fontWeight: FontWeight.bold,
-                                textAlign: TextAlign.center,
-                                textColor: AppColors.Primary,
+                              padding: EdgeInsets.only(left: 16, bottom: 3.w, top: 3.w,right: 3.w),
+                              child: InkWell(
+                                onTap: () async {
+                                  if (context.isConnected) {
+                                    await context.pushNamed(MapRoute(
+                                        clientLat: widget.params.lat,
+                                        // clientDetails?.clientAddress!.firstOrNull?.clientAddressLatitude?.toDouble(),
+                                        clientLong: widget.params.long,
+                                        //clientDetails?.clientAddress!.firstOrNull?.clientAddressLongitude?.toDouble(),
+                                        address: widget.params.location,
+                                        imageUrl: widget.params.avatar ?? ""));
+                                  } else {
+                                    showSnackbarError("No Internet Connection.!");
+                                  }
+                                },
+                                child: Container(
+                                  height: 58,
+                                  width: 58,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                      border: Border.all(
+                                          width: 1, color: const Color(0xffF1F1FF)),
+                                      color: const Color(0xffF1F1FF) //Color(0xffF1F1FF),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(2.h),
+                                    child: SvgImage(
+                                      SvgIcons.location,
+                                      fit: BoxFit.fitHeight,
+                                      size: 0.5.h,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                            SizedBox(
-                              height: 2.h,
+                            Padding(
+                              padding: EdgeInsets.only(right: 3.w, bottom: 3.w, top: 3.w),
+                              child: InkWell(
+                                onTap: () async {
+                                  final Uri phoneUri = Uri(scheme: 'tel', path: widget.params.phone); //
+                                  try {
+                                    await launchUrlString("tel://${widget.params.phone}");
+                                  } catch (_) {}
+                                },
+                                child: Container(
+                                  height: 58,
+                                  width: 58,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                      border: Border.all(
+                                          width: 1, color: const Color(0xffFFF7EB)),
+                                      color: const Color(0xffFFF7EB)),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(2.h),
+                                    child: SvgImage(
+                                      SvgIcons.phone,
+                                      fit: BoxFit.fill,
+                                      size: 0.5.h,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
-                            ElevatedButton(
-                              onPressed: () async {
+                            const Spacer(),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                              child: InkWell(onTap: () {
+                                //   _showDateTimeDialog(context, visit);
+                                //  showDateTimeBottomSheet(context,visit);
                                 selectServiceBottomSheet(context, visit);
-                                //  showDateTimeBottomSheet(context, visit);
+                                //    await visit.clientVisitsAddApi(companyId: widget.params.client?.companyId,employeeId:widget.params.client?.userId,sequenceID: widget.params.client?.sequenceId,clientId: int.parse(widget.params.client!.clientId.toString())  );
+
                               },
-                              child: Txt(
-                                "Add Visit",
-                                fontSize: 1.8.t,
-                                fontWeight: FontWeight.bold,
-                                textColor: Colors.white,
+                                child: const AppImageAsset(image: AppIcons.ic_visits,
+                                  height: 72,
+                                  width: 72,
+                                ),
                               ),
                             ),
                           ],
                         ),
-                      ),
-                    ),
+                      )
+                      /// Remove Calender
+                      /*  Container(
+                              height: 4.h,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 15,
+                                itemBuilder: (context, index) {
+                                  DateTime date = startDate.add(Duration(days: index));
+                                  bool isSelected = date.day == selectedDate.day && date.month == selectedDate.month && date.year == selectedDate.year;
+                                  bool isToday = date.day == DateTime.now().day &&
+                                      date.month == DateTime.now().month &&
+                                      date.year == DateTime.now().year;
 
-                    /// Remove Calender
-                    /*  Container(
-                            height: 4.h,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: 15,
-                              itemBuilder: (context, index) {
-                                DateTime date = startDate.add(Duration(days: index));
-                                bool isSelected = date.day == selectedDate.day && date.month == selectedDate.month && date.year == selectedDate.year;
-                                bool isToday = date.day == DateTime.now().day &&
-                                    date.month == DateTime.now().month &&
-                                    date.year == DateTime.now().year;
-
-                                return GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      selectedDate = date;
-                                    });
-                                  },
-                                  child: isSelected
-                                      ? Container(
-                                    decoration: BoxDecoration(
-                                      color: isSelected ? AppColors.theme : Colors.transparent,
-                                      borderRadius: BorderRadius.circular(2.w),
-                                      border: Border.all(
-                                        color: isSelected ? Colors.blue : Colors.grey,
+                                  return GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedDate = date;
+                                      });
+                                    },
+                                    child: isSelected
+                                        ? Container(
+                                      decoration: BoxDecoration(
+                                        color: isSelected ? AppColors.theme : Colors.transparent,
+                                        borderRadius: BorderRadius.circular(2.w),
+                                        border: Border.all(
+                                          color: isSelected ? Colors.blue : Colors.grey,
+                                        ),
                                       ),
-                                    ),
-                                    child: Center(
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 2.w),
-                                        child: Row(
+                                      child: Center(
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 2.w),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                            isToday ?   Txt(
+                                                "Today",
+                                                textColor: Colors.white,
+                                              ) : SizedBox(),
+                                              SizedBox(width: 2.w),
+                                              Text(
+                                                DateFormat('d').format(date),
+                                                style: TextStyle(
+                                                  fontSize: 1.6.t,
+                                                  color: isSelected ? Colors.white : Colors.black,
+                                                ),
+                                              ),
+                                              SizedBox(width: 2.w),
+                                              Text(
+                                                DateFormat('MMMM').format(date),
+                                                style: TextStyle(
+                                                  fontSize: 1.6.t,
+                                                  color: isSelected ? Colors.white : Colors.grey,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                        : Container(
+                                      width: 70,
+                                      child: Center(
+                                        child: Column(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                          isToday ?   Txt(
-                                              "Today",
-                                              textColor: Colors.white,
-                                            ) : SizedBox(),
-                                            SizedBox(width: 2.w),
                                             Text(
                                               DateFormat('d').format(date),
                                               style: TextStyle(
-                                                fontSize: 1.6.t,
+                                                fontSize: 18,
                                                 color: isSelected ? Colors.white : Colors.black,
-                                              ),
-                                            ),
-                                            SizedBox(width: 2.w),
-                                            Text(
-                                              DateFormat('MMMM').format(date),
-                                              style: TextStyle(
-                                                fontSize: 1.6.t,
-                                                color: isSelected ? Colors.white : Colors.grey,
                                               ),
                                             ),
                                           ],
                                         ),
                                       ),
                                     ),
-                                  )
-                                      : Container(
-                                    width: 70,
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            DateFormat('d').format(date),
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              color: isSelected ? Colors.white : Colors.black,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),*/
-                  ],
-                ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Padding(
-                    padding: EdgeInsets.all(3.w),
-                    child: FloatingActionButton(
-                      onPressed: () async {
-                        //   _showDateTimeDialog(context, visit);
-                        //  showDateTimeBottomSheet(context,visit);
-                        selectServiceBottomSheet(context, visit);
-                        //    await visit.clientVisitsAddApi(companyId: widget.params.client?.companyId,employeeId:widget.params.client?.userId,sequenceID: widget.params.client?.sequenceId,clientId: int.parse(widget.params.client!.clientId.toString())  );
-                      },
-                      child: const Center(
-                          child: Txt(
-                        "Add Visit",
-                        textAlign: TextAlign.center,
-                        textColor: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      )),
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(3.w),
-                        child: FloatingActionButton(
-                          onPressed: () async {
-                            if (context.isConnected) {
-                              await context.pushNamed(MapRoute(
-                                  clientLat: widget.params.lat, // clientDetails?.clientAddress!.firstOrNull?.clientAddressLatitude?.toDouble(),
-                                  clientLong: widget.params.long, //clientDetails?.clientAddress!.firstOrNull?.clientAddressLongitude?.toDouble(),
-                                  address: widget.params.location,
-                                  imageUrl: widget.params.avatar ?? ""));
-                            } else {
-                              showSnackbarError("No Internet Connection.!");
-                            }
-                          },
-                          child: Container(
-                            height: 8.h,
-                            width: 8.h,
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(3.5.h), border: Border.all(width: 1, color: const Color(0xffF1F1FF)), color: Colors.white //Color(0xffF1F1FF),
-                                ),
-                            child: Padding(
-                              padding: EdgeInsets.all(2.h),
-                              child: SvgImage(
-                                SvgIcons.location,
-                                fit: BoxFit.fitHeight,
-                                size: 0.5.h,
+                                  );
+                                },
                               ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(right: 3.w, bottom: 3.w, top: 3.w),
-                        child: FloatingActionButton(
-                          onPressed: () async {
-                            final Uri phoneUri = Uri(scheme: 'tel', path: widget.params.phone); //
-                            try {
-                              await launchUrlString("tel://${widget.params.phone}");
-                            } catch (_) {}
-                          },
-                          child: Container(
-                            height: 7.h,
-                            width: 7.h,
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(3.5.h), border: Border.all(width: 1, color: const Color(0xffFFF7EB)), color: const Color(0xffFFF7EB)),
-                            child: Padding(
-                              padding: EdgeInsets.all(2.h),
-                              child: SvgImage(
-                                SvgIcons.phone,
-                                fit: BoxFit.fill,
-                                size: 0.5.h,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                            ),*/
                     ],
                   ),
-                )
-              ],
+                ],
+              ),
             ),
           ),
         );
@@ -664,6 +731,8 @@ class _DemoScreenState extends State<DemoScreen> with AutomaticKeepAliveClientMi
                       ElevatedButton(
                         onPressed: () async {
                           //showDateTimeBottomSheet(context, visit);
+                          log('temps datta -->${widget.params.client!.id.toString()}');
+                          log('temps datta -->${widget.params.client!.toJson()}');
                           await visit.clientVisitsAddApi(
                             context,
                             companyId: widget.params.client?.companyId?.toInt(),

@@ -25,8 +25,8 @@ class ClientVisitAddResponse {
   final String? scheduleEndTime;
   final String contingencyPlan;
   final int reschedule;
-  final String adjInDateTime;
-  final String adjOutDateTime;
+  final String? adjInDateTime;
+  final String? adjOutDateTime;
   final String? billVisit;
   final int hoursToBill;
   final int hoursToPay;

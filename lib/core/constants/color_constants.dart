@@ -4,6 +4,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+ String HurmeGeometricSans1 = 'HurmeGeometricSans1';
+
 class AppColors {
   AppColors._();
   static const Color white = Colors.white;
@@ -21,6 +23,19 @@ class AppColors {
   static const Color hint_text_color_dark = Color(0xff999999);
   static const Color dot_dark = Color(0xffD8D8D8);
   static const Color home_card_color = Color(0xffF3F5F7);
+  static const Color  lightSeaGreen = Color(0xff6CC1B0);
+  static const Color  appGreyLight = Color(0xffAFAFAF);
+  static const Color  appGreyWhite = Color(0xffF8F8F8);
+  static const Color  appGreyBlack = Color(0xff6E747C);
+  static const Color  appBlack = Color(0xff242424);
+  static const Color  appBlack87 = Colors.black87;
+  static const Color  appOrange = Color(0xffFEA31D);
+  static const Color  appGreyWithWhite = Color(0xffCECFD4);
+  static const Color  appGrey = Color(0xffBBBBBB);
+  static const Color  appLight = Color(0xffF4F5F9);
+  static const Color  appDark = Color(0xff666666);
+  static const Color  appHint = Color(0xff979797);
+  static const Color  appHintLight = Color(0xffAFB3B8);
 }
 
 extension GetInvertedColor on Color {

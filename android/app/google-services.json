@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "421075024065",
+    "project_id": "evv-caretrack",
+    "storage_bucket": "evv-caretrack.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:421075024065:android:47a29a591aac3bba017c40",
+        "android_client_info": {
+          "package_name": "com.imbu.caretrack"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgkldm1m29pByM5oDUo8Kbg4LxzsEpbd0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

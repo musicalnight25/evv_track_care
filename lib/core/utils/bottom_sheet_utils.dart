@@ -77,16 +77,17 @@ class _TaskListSheetState extends State<TaskListSheet> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Txt(
+                      const Txt(
                         "Task List",
-                        fontSize: 2.2.t,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700,
                       ),
                       VGap(0.1.h),
-                      Txt(
+                      const Txt(
                         "Select your tasks",
-                        fontSize: 1.6.t,
-                        textColor: AppColors.grey,
+                        fontSize: 16,
+                        textColor: AppColors.black,
+                        fontWeight: FontWeight.w400,
                       ),
                     ],
                   ),
@@ -107,59 +108,71 @@ class _TaskListSheetState extends State<TaskListSheet> {
             Expanded(
               child: ListView.separated(
                 itemCount: widget.nameList.length,
-                separatorBuilder: (context, index) => const Divider(
-                  thickness: 0.5,
-                  height: 0,
-                  color: AppColors.grey,
-                ),
+                separatorBuilder: (context, index) => const SizedBox(height: 12,),
                 itemBuilder: (context, index) {
                   final currentItem = widget.nameList[index];
                   final isDisabled = selectedTask.contains(currentItem);
-                  return GestureDetector(onTap: () {
+                  return visit.taskDataTemp != null && visit.taskDataTemp!.taskName == widget.nameList[index]
+                      ? const SizedBox()
+                      : GestureDetector(onTap: () {
                     selectName(index, widget.nameList[index]);
                     selectedTask.clear();
                     selectedTask.add(widget.nameList[index]);
                     log("Selected task ${widget.nameList[index]}");
                   },
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.w),
-                      child: Row(
-                        children: [
-                          Container(
-                              width: 2.6.h,
-                              height: 2.6.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(1.3.h),
-                                border: Border.all(color: Colors.black),
-                                color: AppColors.white,
-                              ),
-                              child: index == selectedIndex
-                                  ? Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Container(
-                                  width: 1.2.h,
-                                  height: 1.2.h,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(0.6.h),
-                                    color: AppColors.Primary,
-                                  ),
-                                ),
-                              )
-                                  : const SizedBox()),
-                          SizedBox(
-                            width: 3.w,
-                          ),
-                          Flexible(
-                            child: Txt(
-                              widget.nameList[index] ?? "",
-                              fontSize: 2.2.t,
-                              fontWeight: FontWeight.w400,
-                              textColor: Colors.black,
-                              maxLines: 2,
-                              overFlow: TextOverflow.ellipsis,
+                    child: Container(
+                      height: 82,
+                      decoration: BoxDecoration(
+                        color: AppColors.bgColor,
+                        borderRadius: BorderRadius.circular(18),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 3.w),
+                        child: Row(
+                          children: [
+                            Container(
+                                width: 49,
+                                height: 49,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(11),
+                                  color: AppColors.theme,
+                                ),),
+                            SizedBox(
+                              width: 3.w,
                             ),
-                          )
-                        ],
+                            Expanded(
+                              child: Txt(
+                                widget.nameList[index] ?? "",
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                textColor: Colors.black,
+                                maxLines: 2,
+                                overFlow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Container(
+                                width: 2.6.h,
+                                height: 2.6.h,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(1.3.h),
+                                  border: Border.all(color: Colors.black),
+                                  color: AppColors.white,
+                                ),
+                                child: index == selectedIndex
+                                    ? Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Container(
+                                    width: 1.2.h,
+                                    height: 1.2.h,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(0.6.h),
+                                      color: AppColors.Primary,
+                                    ),
+                                  ),
+                                )
+                                    : const SizedBox()),
+                          ],
+                        ),
                       ),
                     ),
                   );
@@ -183,8 +196,9 @@ class _TaskListSheetState extends State<TaskListSheet> {
                 },
               ),
             ),
-            VGap(1.h),
+            VGap(1.6.h),
             CustomElevatedButton(
+              height: 54,
               onTap: () async {
               /*
                 if (selectedTask.isNotEmpty) {
@@ -194,13 +208,13 @@ class _TaskListSheetState extends State<TaskListSheet> {
                   showToast("Please select at list one task.");
                 }*/
 
-
+                visit.selectTempTask(selectedTaskName);
                 await visit.setSelectedTask(selectedTask);
                 if(selectedIndex != -1){
-                  await visit.visitTaskAddApi(context,
-                      clientId: widget.clientId,
-                      companyId: widget.companyId.toString(),
-                      visitId: widget.visitId);
+                  // await visit.visitTaskAddApi(context,
+                  //     clientId: widget.clientId,
+                  //     companyId: widget.companyId.toString(),
+                  //     visitId: widget.visitId);
                 }else {
                   showToast("Please select at list one task.");
                 }
@@ -209,18 +223,17 @@ class _TaskListSheetState extends State<TaskListSheet> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Center(
-                    child: Txt(
-                      "Done",
-                      fontSize: 1.8.t,
-                      textColor: AppColors.white,
-                      textAlign: TextAlign.center,
-                    ),
+                  Txt(
+                    "Done",
+                    fontSize: 16,
+                    textColor: AppColors.white,
+                    textAlign: TextAlign.center,
+                    fontWeight: FontWeight.w600,
                   ),
                 ],
               ),
             ),
-            VGap(1.5.h),
+            VGap(2.h),
           ],
         ),
       );

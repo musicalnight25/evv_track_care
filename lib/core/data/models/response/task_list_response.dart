@@ -77,6 +77,7 @@ class TaskList {
   int? serviceId;
   String? taskName;
   String? taskCode;
+  int? taskId;
 
   TaskList({
      this.companyId,
@@ -85,6 +86,7 @@ class TaskList {
      this.serviceId,
      this.taskName,
      this.taskCode,
+     this.taskId,
   });
 
   factory TaskList.fromJson(Map<String, dynamic> json) {
@@ -95,6 +97,7 @@ class TaskList {
       serviceId: json['service_id'],
       taskName: json['task_name'],
       taskCode: json['task_code'],
+      taskId: json['task_id'],
     );
   }
 
@@ -106,6 +109,7 @@ class TaskList {
       'service_id': serviceId,
       'task_name': taskName,
       'task_code': taskCode,
+      'task_id': taskId,
     };
   }
 }

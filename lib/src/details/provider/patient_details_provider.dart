@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:healthcare/config/routes/app_router/route_extensions.dart';
 import 'package:healthcare/core/constants/app_constants.dart';
 import 'package:healthcare/core/data/models/requests/visits_reqs/visit_request.dart';
@@ -60,7 +62,7 @@ class PatientDetailsProvider extends ChangeNotifier {
   /// Visit Details Api
   ///
 
-  Future<bool> visitDetailsApi({bool listen = true,String? visitId}) async {
+  Future<bool> visitDetailsApi({bool listen = true,String? visitId,bool isStartTime = false,bool isEndTime = false}) async {
     bool isSuccess = false;
     try {
       final isNetwork = await _networkService.isConnected;
@@ -72,23 +74,23 @@ class PatientDetailsProvider extends ChangeNotifier {
            isSuccess = res.visit != null;
         _taskData = res.tasks ?? [];
         _service = res.services ;
-        if(res.visit!.scheduleStartTime!=null) {
-          _startTime = res.visit?.scheduleStartTime;
-
+        log('_service: ${res.services!.toJson()}');
+        log('res.visit: ${res.visit!.toJson()}');
+        if(res.visit!.adjInDateTime!=null) {
+          // _startTime = res.visit?.scheduleStartTime;
+          _startTime = res.visit?.adjInDateTime;
         }else{
           _startTime = null;
-
         }
 
-        if(res.visit!.scheduleEndTime!=null) {
-          _endTime = res.visit?.scheduleEndTime;
-
+        if(res.visit!.adjOutDateTime!=null) {
+          // _endTime = res.visit?.scheduleEndTime;
+          _endTime = res.visit?.adjOutDateTime;
         }else{
-
           _endTime = null;
         }
 
-
+        notifyListeners();
       } else {
         // showSnackbarError("No Internet Connection");
 

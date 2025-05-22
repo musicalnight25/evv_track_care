@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:get/get.dart';
 import 'package:healthcare/config/routes/app_router/router.dart';
 import 'package:healthcare/config/routes/routes.dart';
 import 'package:healthcare/core/constants/app_constants.dart';
@@ -15,13 +17,35 @@ import 'package:provider/provider.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 import 'core/helper/database/database_helper.dart';
+import 'core/helper/remote_config_helper.dart';
 import 'core/utils/size_config.dart';
 import 'di_container.dart';
+import 'firebase_options.dart';
 import 'http_overrides.dart';
 import 'src/splash/providers/splash_provider.dart';
 
+
+
+/*
+ann.muller@swiftdata.test
+
+allenbaiyee@me.com
+1qRKB8gtb
+
+allenbaiyee@me.com
+Ul1N12PrZ
+
+#iMbu2017!
+
+
+*/
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await RemoteConfigService.instance.setupRemoteConfig();
   // await DatabaseHelper.instance.database;
   await Di.init();
   HttpOverrides.global = MyHttpOverrides();
@@ -67,7 +91,7 @@ class _MyAppState extends State<MyApp> {
         return OrientationBuilder(
           builder: (BuildContext context2, Orientation orientation) {
             SizeConfig.init(context);
-            return MaterialApp(
+            return GetMaterialApp(
               /// TODO : CHANGE NAME IN APP_CONSTANTS
               title: AppConsts.appName,
               debugShowCheckedModeBanner: false,

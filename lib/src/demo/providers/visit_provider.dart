@@ -18,6 +18,7 @@ import 'package:healthcare/core/network/network_service.dart';
 import 'package:healthcare/src/details/provider/patient_details_provider.dart';
 import 'package:healthcare/src/home/providers/home_provider.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:intl/intl.dart';
 import 'package:mime_type/mime_type.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -96,7 +97,22 @@ class DemoProvider extends ChangeNotifier {
   List<Payer> get payerList => _payerList;
   List<Payer> _payerList = [];
 
+  //  TaskList _taskDataTemp = TaskList();
+  // TaskList get taskDataTemp => _taskDataTemp;
+
+  TaskList? taskDataTemp;
+
   /// Selected Service
+
+
+  selectTempTask(String selectService) async {
+    TaskList selectedTask = taskList.firstWhere(
+        (element) => element.taskName == selectService,
+        orElse: () => TaskList());
+    log('selectedTask-->: ${selectedTask.toJson()}');
+    taskDataTemp = selectedTask;
+    notifyListeners();
+  }
 
   selectService(int index, Service select) async {
     _selectedIndex = index;
@@ -225,28 +241,31 @@ class DemoProvider extends ChangeNotifier {
       if (isNetwork) {
         _selectedTaskNames.forEach((name) async {
           final item = _taskList.firstWhere((item) => item.taskName == name); // _taskList.map((task) => task.name as String).toList();
-          int? id = item.serviceId;
+          int? id = item.taskId;
           log('id : ${item.toJson()}');
-
           print("Current Task id ${item.taskName}");
-
-          final req = ClientVisitsTaskAddRequest(
-              visitId: visitId ?? "2",
-              companyId: companyId ?? "2",
-              clientId: clientId ?? "2",
-              employeeId: employeeId ?? "",
-              taskId: id.toString(),
-              taskReading: name ?? "",
-              taskRefused: "0");
-          log('req : ${req.toJson()}');
-          final res = await _visitsRepo.ClientVisitTaskAdd(req);
-          isSuccess = res.companyId != null;
-          _visitTaskAddResponse = res;
-          showToast("Task submit successfully");
         });
+        final req = ClientVisitsTaskAddRequest(
+          visitId: visitId ?? "2",
+          companyId: companyId ?? "2",
+          clientId: clientId ?? "2",
+          employeeId: employeeId ?? "",
+          taskId: "${taskDataTemp!.taskId}",
+          taskReading:  taskDataTemp!.taskName ?? "",
+          taskRefused: "0",
+          taskCode: "${taskDataTemp!.taskCode}",
+          payerID: "${taskDataTemp!.payerId}",
+          serviceId: "${taskDataTemp!.serviceId}",
+        );
+        log('req : ${req.toJson()}');
+        final res = await _visitsRepo.ClientVisitTaskAdd(req);
+        isSuccess = res.companyId != null;
+        _visitTaskAddResponse = res;
+        showToast("Task submit successfully");
 
         _selectedTaskNames.clear();
         _selectedDate = DateTime.now();
+        taskDataTemp = null;
         await Provider.of<PatientDetailsProvider>(context, listen: false).visitDetailsApi(visitId: visitId);
 
         //     _visitData = res;
@@ -312,12 +331,18 @@ class DemoProvider extends ChangeNotifier {
   /// Start Visit Api
   ///
 
-  Future<bool> visitStartApi({bool listen = true, String? visitId, String? startTime}) async {
+  Future<bool> visitStartApi({bool listen = true, String? visitId, String? startTime,Map<String, dynamic>? location}) async {
     bool isSuccess = false;
     try {
       final isNetwork = await _networkService.isConnected;
       if (isNetwork) {
-        final req = StartVisitRequest(visitId: visitId ?? "", ScheduleStartTime: startTime ?? "");
+        final req = StartVisitRequest(
+            visitId: visitId ?? "",
+          AdjInDateTime: startTime ?? "",
+        latitude: location?['latitude'] ?? "",
+        longitude: location?['longitude'] ?? "",
+        address: location?['address'] ?? "",
+        );
         final res = await _visitsRepo.startVisit(req);
         isSuccess = res.companyId != null;
       } else {
@@ -340,12 +365,18 @@ class DemoProvider extends ChangeNotifier {
   /// End Visit Api
   ///
 
-  Future<bool> visitEndApi({bool listen = true, String? visitId, String? endTime}) async {
+  Future<bool> visitEndApi({bool listen = true, String? visitId, String? endTime,Map<String, dynamic>? location}) async {
     bool isSuccess = false;
     try {
       final isNetwork = await _networkService.isConnected;
       if (isNetwork) {
-        final req = CompleteVisitReq(visitId: visitId ?? "", ScheduleEndTime: endTime ?? "");
+        final req = CompleteVisitReq(
+          visitId: visitId ?? "",
+          AdjOutDateTime: endTime ?? "",
+          latitude: location?['latitude'] ?? "",
+          longitude: location?['longitude'] ?? "",
+          address: location?['address'] ?? "",
+        );
         final res = await _visitsRepo.endVisit(req);
         isSuccess = res.companyId != null;
       } else {
@@ -378,7 +409,8 @@ class DemoProvider extends ChangeNotifier {
       final req = ClientVisitsAddRequest(
           clientId: clientId ?? 2,
           employeeId: int.tryParse(employeeId.toString()) ?? 1,
-          payerId: selectedService.id ?? 1,
+          payerId: num.tryParse(payerId.toString()) ?? 1,
+          // payerId: selectedService.id ?? 1,
           companyId: companyId ?? 2,
           visitOtherID: "23525",
           sequenceID: sequenceID ?? "2524524525",

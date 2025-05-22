@@ -6,6 +6,9 @@ class ClientVisitsTaskAddRequest {
   final String taskId;
   final String taskReading;
   final String taskRefused;
+  final String taskCode;
+  final String payerID;
+  final String serviceId;
 
   ClientVisitsTaskAddRequest({
     required this.visitId,
@@ -15,6 +18,9 @@ class ClientVisitsTaskAddRequest {
     required this.taskId,
     required this.taskReading,
     required this.taskRefused,
+    required this.taskCode,
+    required this.payerID,
+    required this.serviceId,
   });
 
   // Convert to JSON
@@ -27,6 +33,9 @@ class ClientVisitsTaskAddRequest {
       "TaskID": taskId,
       "TaskReading": taskReading,
       "TaskRefused": taskRefused,
+      "task_code": taskCode,
+      "PayerID": payerID,
+      "service_id": serviceId,
     };
   }
 
@@ -40,6 +49,9 @@ class ClientVisitsTaskAddRequest {
       taskId: json['TaskID'],
       taskReading: json['TaskReading'],
       taskRefused: json['TaskRefused'],
+      taskCode: json['task_code'],
+      payerID: json['PayerID'],
+      serviceId: json['service_id'],
     );
   }
 }

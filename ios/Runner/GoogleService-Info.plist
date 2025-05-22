@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyB3U9-GJz-4RYecLYY_N6LPmCkT52zqLbA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>421075024065</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.app.healthcare.RunnerTests</string>
+	<key>PROJECT_ID</key>
+	<string>evv-caretrack</string>
+	<key>STORAGE_BUCKET</key>
+	<string>evv-caretrack.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:421075024065:ios:29256af33babfe75017c40</string>
+</dict>
+</plist>

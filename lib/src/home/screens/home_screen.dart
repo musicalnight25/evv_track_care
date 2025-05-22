@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:healthcare/config/routes/app_router/route_extensions.dart';
 import 'package:healthcare/config/routes/app_router/route_params.dart';
+import 'package:healthcare/core/common/widgets/app_image_assets.dart';
 import 'package:healthcare/core/constants/app_constants.dart';
 import 'package:healthcare/core/constants/color_constants.dart';
 import 'package:healthcare/core/constants/image_constants.dart';
@@ -85,111 +86,193 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   Widget build(BuildContext context) {
     super.build(context);
     return NetworkCheckerWidget(
-      child: Scaffold(
-        body: SafeArea(
-          child: Consumer<HomeProvider>(builder: (context, home, _) {
-            return Container(
-              color: Colors.white,
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0, left: 8),
-                              child: SvgImage(
-                                SvgIcons.logo_svg,
-                                fit: BoxFit.fitHeight,
-                                size: 0.8.h,
-                              ),
-                            ),
-                            const Spacer(),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 1.5.h,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Txt(
-                              "Agency : ",
-                              fontSize: 2.t,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            Txt(
-                              home.companyName ?? "",
-                              fontSize: 2.t,
-                              fontWeight: FontWeight.w500,
-                              textColor: Colors.black,
-                            ),
-                            SizedBox(width: 5.w),
-                            InkWell(
-                                onTap: () {
-                                  if (context.isConnected) {
-                                    context.pushNamedAndRemoveUntil(const SelectAgencyRoute(), (r) => false);
-                                  } else {
-                                    showSnackbarError("No Internet Connection.!");
-                                  }
-                                },
-                                child: Image.asset(
-                                  AppImages.icon_edit,
-                                  width: 2.h,
-                                ))
-                          ],
-                        ),
-                        SizedBox(
-                          height: 1.5.h,
-                        ),
-                        Txt(
-                          "Client List",
-                          fontWeight: FontWeight.bold,
-                          fontSize: 2.2.t,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(width: 1)),
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.dark.copyWith(statusBarColor: AppColors.bgColor),
+        child: Scaffold(
+          body: SafeArea(
+            child: Consumer<HomeProvider>(builder: (context, home, _) {
+              return Container(
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(top: 30.0, left: 25),
                             child: Row(
                               children: [
-                                Expanded(
-                                  child: TextField(
-                                    controller: home.searchController,
-                                    onChanged: (q) async {
-                                      await Provider.of<HomeProvider>(context, listen: false).filterClients(q, home.finalClientData);
-                                    },
-                                    decoration: InputDecoration(hintText: 'Search...', border: InputBorder.none, contentPadding: EdgeInsets.symmetric(horizontal: 2.w)),
+                                AppImageAsset(
+                                  image: AppIcons.logoSvg,
+                                  height: 26,
+                                  width: 98,
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 2.h,
+                          ),
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 25),
+                            padding: const EdgeInsets.symmetric(vertical: 14,horizontal: 10),
+                            decoration: BoxDecoration(
+                              color: AppColors.bgColor,
+                              borderRadius: BorderRadius.circular(9),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const Txt(
+                                  "Agency : ",
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                 Expanded(
+                                  child: Txt(
+                                    home.companyName ?? "",
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                    textColor: Colors.black,
+                                    maxLines: 1,
+                                    overFlow: TextOverflow.ellipsis,
                                   ),
                                 ),
-                                Visibility(
-                                  visible: home.searchController.text.isNotEmpty,
-                                  child: InkWell(
-                                      onTap: () async {
-                                        home.searchController.text = "";
-                                        await Provider.of<HomeProvider>(context, listen: false).filterClients("", home.finalClientData);
-                                      },
-                                      child: Icon(
-                                        Icons.close,
-                                        size: 2.5.h,
-                                      )),
-                                ),
-                                SizedBox(
-                                  width: 2.w,
+                                SizedBox(width: 5.w),
+                                Column(
+                                  children: [
+                                    InkWell(
+                                        onTap: () {
+                                          if (context.isConnected) {
+                                            context.pushNamedAndRemoveUntil(const SelectAgencyRoute(), (r) => false);
+                                          } else {
+                                            showSnackbarError("No Internet Connection.!");
+                                          }
+                                        },
+                                        child: const AppImageAsset(image: AppIcons.ic_more,
+                                        height: 15,
+                                          width: 10,
+                                          fit: BoxFit.contain,
+                                        )
+                                    ),
+                                  ],
                                 )
                               ],
                             ),
                           ),
-                        ),
-                        Visibility(
-                          visible: home.clientData.isNotEmpty,
-                          child: Expanded(
+                          SizedBox(
+                            height: 1.7.h,
+                          ),
+                          const Txt(
+                            "Client List",
+                            fontWeight: FontWeight.w400,
+                            fontSize: 15,
+                            textColor: AppColors.black,
+                          ),
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 25,vertical: 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(9),
+                              border: Border.all(
+                                color: AppColors.appGreyLight,
+                                width: 0.7
+                              )
+                            ),
+                            child: Row(
+                              children: [
+                                const SizedBox(width: 10,),
+                                const AppImageAsset(image: AppIcons.ic_search),
+                                Expanded(
+                                  child: TextField(
+                                    controller: home.searchController,
+                                    onChanged: (q) async {
+                                      await Provider.of<HomeProvider>(context,
+                                          listen: false)
+                                          .filterClients(
+                                          q, home.finalClientData);
+                                    },
+                                    style: const TextStyle(
+                                      color: AppColors.hint_text_color_dark,
+                                      fontSize: 14,
+                                      fontFamily: 'HurmeGeometricSans1',
+                                    ),
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      hintText: 'Search',
+                                      hintStyle: const TextStyle(
+                                        color: AppColors.hint_text_color_dark,
+                                        fontSize: 14,
+                                        fontFamily: 'HurmeGeometricSans1',
+                                      ),
+                                      contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 2.w,
+                                      ),
+                                    ),
+
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        /*  Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(width: 1)),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      controller: home.searchController,
+                                      onChanged: (q) async {
+                                        await Provider.of<HomeProvider>(context,
+                                                listen: false)
+                                            .filterClients(
+                                                q, home.finalClientData);
+                                      },
+                                      decoration: InputDecoration(
+                                          hintText: 'Search...',
+                                          border: InputBorder.none,
+                                          disabledBorder: InputBorder.none,
+                                          focusedBorder: InputBorder.none,
+                                          enabledBorder: InputBorder.none,
+
+                                          contentPadding: EdgeInsets.symmetric(
+                                              horizontal: 2.w,
+                                          ),
+                                      ),
+                                    ),
+                                  ),
+                                  Visibility(
+                                    visible:
+                                        home.searchController.text.isNotEmpty,
+                                    child: InkWell(
+                                        onTap: () async {
+                                          home.searchController.text = "";
+                                          await Provider.of<HomeProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .filterClients(
+                                                  "", home.finalClientData);
+                                        },
+                                        child: Icon(
+                                          Icons.close,
+                                          size: 2.5.h,
+                                        )),
+                                  ),
+                                  SizedBox(
+                                    width: 2.w,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),*/
+                          Expanded(
                             child: SingleChildScrollView(
                               child: Column(
                                 children: [
-                                  ...List.generate(
+                                  if(home.clientData.isNotEmpty)
+                                    ...List.generate(
                                       home.clientData.length,
                                       (index) => home.clientData.isNotEmpty
                                           ? Padding(
@@ -234,68 +317,66 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                               "Data Not Found",
                                               textColor: Colors.black,
                                             ))),
+                                  if(home.clientData.isEmpty)
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 15.h, right: 10.w, left: 10.w),
+                                      child: Column(
+                                        children: [
+                                          Image.asset(AppIcons.ic_no_data, scale: 0.1),
+                                          Txt(
+                                            "No client found in this company",
+                                            fontSize: 2.5.t,
+                                            textAlign: TextAlign.center,
+                                            fontWeight: FontWeight.bold,
+                                            textColor: AppColors.Primary,
+                                          ),
+                                        ],
+                                      ),
+                                    )
                                 ],
                               ),
                             ),
                           ),
-                        ),
-                        Visibility(
-                            visible: home.clientData.isEmpty,
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 15.h, right: 10.w, left: 10.w),
-                              child: Column(
-                                children: [
-                                  Image.asset(AppIcons.ic_no_data, scale: 0.1),
-                                  Txt(
-                                    "No client found in this company",
-                                    fontSize: 2.5.t,
-                                    textAlign: TextAlign.center,
-                                    fontWeight: FontWeight.bold,
-                                    textColor: AppColors.Primary,
-                                  ),
-                                ],
-                              ),
-                            ))
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  Container(
-                      height: 6.h,
-                      color: Colors.white,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 4.w),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              width: 3.h,
-                            ),
-                            Icon(
-                              Icons.home_filled,
-                              size: 3.h,
-                              color: AppColors.Primary,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                if (context.isConnected) {
-                                  _showLogoutDialog(context);
-                                } else {
-                                  showSnackbarError("No Internet Connection.!");
-                                }
-                              },
-                              child: Icon(
-                                Icons.logout,
-                                size: 3.h,
-                                color: AppColors.Primary,
-                              ),
-                            ),
-                          ],
+                    Container(
+                      margin: EdgeInsets.only(top: 10),
+                        height: 74,
+                        decoration: const BoxDecoration(
+                          color: AppColors.appGreyWhite
                         ),
-                      ))
-                ],
-              ),
-            );
-          }),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 4.w),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 3.h,
+                              ),
+                              const AppImageAsset(image: AppIcons.ic_home),
+                              Spacer(),
+                              GestureDetector(
+                                onTap: () {
+                                  if (context.isConnected) {
+                                    _showLogoutDialog(context);
+                                  } else {
+                                    showSnackbarError("No Internet Connection.!");
+                                  }
+                                },
+                                child: Icon(
+                                  Icons.logout,
+                                  size: 3.h,
+                                  color: AppColors.appGreyBlack,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ))
+                  ],
+                ),
+              );
+            }),
+          ),
         ),
       ),
     );

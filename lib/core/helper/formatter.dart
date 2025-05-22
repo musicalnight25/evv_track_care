@@ -54,4 +54,12 @@ class Formatter {
     if (dateString == null) return null;
     return stringFromDateTime(DateFormat(reqFormat).parse(dateString), format: resFormat);
   }
+
+  static String? dateTimeFromStringddMMYY(
+      {String? startTimeStr, String? endTimeStr}) {
+    DateTime startTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(startTimeStr!);
+    DateTime endTime = DateFormat("yyyy-MM-dd HH:mm:ss").parse(endTimeStr!);
+    String timeRange = "${DateFormat("HH:mm").format(startTime)}-${DateFormat("HH:mm").format(endTime)}";
+    return timeRange;
+  }
 }

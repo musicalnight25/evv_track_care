@@ -106,10 +106,10 @@ InputDecoration customInputDecoration({
     fillColor: Colors.white,
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(radius),
-      borderSide: const BorderSide(color: Colors.grey),
+      borderSide: const BorderSide(color: AppColors.light_border),
     ),enabledBorder: OutlineInputBorder(
     borderRadius: BorderRadius.circular(radius),
-    borderSide: const BorderSide(color: AppColors.hint_text_color),
+    borderSide: const BorderSide(color: AppColors.light_border, width: 1),
   ),
     errorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(radius),
@@ -118,9 +118,9 @@ InputDecoration customInputDecoration({
     suffixIcon: suffixIcon,
     prefixIcon: prefixIcon,
     hintText: hintText,
-    hintStyle: TxtStyle(textColor: AppColors.hint_text_color,fontSize: fontSize ?? 2.t, fontWeight: FontWeight.w300),
+    hintStyle: TxtStyle(textColor: AppColors.hint_text_color,fontSize: fontSize ?? 2.t, fontWeight: FontWeight.w400),
     labelText: labelText,
-    labelStyle: TxtStyle(fontSize: fontSize ?? 2.t, fontWeight: FontWeight.w300),
+    labelStyle: TxtStyle(textColor: AppColors.hint_text_color,fontSize: fontSize ?? 2.t, fontWeight: FontWeight.w400),
     errorStyle: TxtStyle(textColor: Colors.redAccent),
     contentPadding: contentPadding ?? EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
     focusedBorder: OutlineInputBorder(
