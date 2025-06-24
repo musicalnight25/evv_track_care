@@ -34,10 +34,10 @@ class VisitsRepoImpl implements VisitsRepo {
   VisitsRepoImpl({required DioClient dioClient}) : _dioClient = dioClient;
 
   @override
-  Future<ClientVisitsResponse> VisitsDetails(VisitsRequest req) async {
+  Future<ClientVisitsResponse?> VisitsDetails(VisitsRequest req) async {
     try {
       final res = await _dioClient.post(
-        Apis.clientVisits,
+        Apis.clientsVisitsSearch,
         data: req.toJson(),
         contentType: CType.json,
       );
@@ -52,9 +52,9 @@ class VisitsRepoImpl implements VisitsRepo {
     } on ServerException catch (e) {
       // Re-throwing ServerException with its original message
       throw ServerException(e.message);
-    } catch (e) {
+    } catch (e,st) {
       // Generic error handling with logging
-      print("Error: $e");
+      print("Error: $e---$st");
       throw const ServerException("Something went wrong.");
     }
   }
@@ -79,9 +79,9 @@ class VisitsRepoImpl implements VisitsRepo {
     } on ServerException catch (e) {
       // Re-throwing ServerException with its original message
       throw ServerException(e.message);
-    } catch (e) {
+    } catch (e,st) {
       // Generic error handling with logging
-      print("Error: $e");
+      print("Error: $e--$st");
       throw const ServerException("Something went wrong.");
     }
   }

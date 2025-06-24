@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -25,6 +26,7 @@ class VisitsInfoWidget extends StatelessWidget {
   final double? height;
   final String? name;
   final String? startTime;
+  final String? startDate;
   final String? endTime;
   final String? location;
   final String? status;
@@ -38,6 +40,7 @@ class VisitsInfoWidget extends StatelessWidget {
     this.imageUrl,
     this.name,
     this.startTime,
+    this.startDate,
     this.endTime,
     this.location,
     this.status,
@@ -182,9 +185,13 @@ class VisitsInfoWidget extends StatelessWidget {
                         ),
                         HGap(2.w),
                         Txt(
-                          DateFormat("dd/MM/yy").format(
+          startTime != 'null'
+              ? DateFormat("dd/MM/yy").format(
                               DateFormat("yyyy-MM-dd HH:mm:ss")
-                                  .parse(startTime!)),
+                                  .parse(startTime!))
+              : DateFormat("dd/MM/yy").format(
+              DateFormat("yyyy-MM-dd HH:mm:ss")
+                  .parse(startDate!)),
                           maxLines: 1,
                           fontSize: 13,
                           textColor: AppColors.black,

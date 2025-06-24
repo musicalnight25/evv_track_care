@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
@@ -102,6 +103,12 @@ class DemoProvider extends ChangeNotifier {
 
   TaskList? taskDataTemp;
 
+  Timer? isTimer;
+  int page = 1;
+  int searchPage = 1;
+  bool isPageNationLoader = false;
+  final TextEditingController searchController = TextEditingController();
+
   /// Selected Service
 
 
@@ -165,7 +172,9 @@ class DemoProvider extends ChangeNotifier {
     return visits.where((visit) {
       // Extract the date part from ScheduleStartTime
       devlog("scheduleStartTime : ${visit.scheduleStartTime}");
-      String scheduleDate = visit.scheduleStartTime.toString().split(' ')[0];
+      String scheduleDate = visit.scheduleStartTime == null
+          ? DateFormat("yyyy-MM-dd").format(visit.createdAt ?? DateTime.now())
+          : visit.scheduleStartTime.toString().split(' ')[0];
       print("Enter get Data Date Wise ${scheduleDate == date}");
       return scheduleDate == date;
     }).toList();
@@ -177,7 +186,7 @@ class DemoProvider extends ChangeNotifier {
     print("Enter get Data Date Wise 1 $date");
     // _visitData = _allvisitData;
     print("Enter get Data Date Wise 2 ${_visitData.length}");
-    _visitData = await filterVisitsByDate(_allvisitData, date.toString().split(' ')[0]);
+    // _visitData = await filterVisitsByDate(_allvisitData, date.toString().split(' ')[0]);
     print("Enter get Data Date Wise 3 ${_visitData.length}");
     notifyListeners();
   }
@@ -191,19 +200,33 @@ class DemoProvider extends ChangeNotifier {
   /// Visit Details Api
   ///
 
-  Future<bool> visitsApi(BuildContext context, {required String id, bool listen = true}) async {
+  Future<bool> visitsApi(BuildContext context, {required String id, bool listen = true,bool isPageNavigation = false}) async {
     bool isSuccess = false;
-    _visitData.clear();
-    _allvisitData.clear();
+    // _visitData.clear();
+    // _allvisitData.clear();
     notifyListeners();
     try {
       final isNetwork = await _networkService.isConnected;
       if (isNetwork) {
-        final req = VisitsRequest(clientId: int.parse(id));
+        if(isPageNavigation){
+          showPageNationLoader(true);
+        }
+        final currTime = Formatter.stringFromDateTime(selectedDate, format: "yyyy-MM-dd");
+        final req = VisitsRequest(
+          clientId: int.parse(id),
+          date: currTime!,
+          page: page,
+        );
         final res = await _visitsRepo.VisitsDetails(req);
         // isSuccess = res.first.companyId != null;
-        _visitData = res.visits;
-        _allvisitData = res.visits.reversed.toList();
+        if(res != null && res.visits != null && res.visits.isNotEmpty){
+          _visitData.addAll(res.visits);
+          _allvisitData.addAll(res.visits.reversed.toList());
+        }else{
+          if(page>1){
+            page--;
+          }
+        }
       } else {
         devlog("client id : $id");
         _visitData = context.read<HomeProvider>().offlineData?.clients?.where((element) => element.id?.toString() == id.toString()).firstOrNull?.visits ?? [];
@@ -217,13 +240,79 @@ class DemoProvider extends ChangeNotifier {
     } on ServerException catch (e) {
       devlogError("ERROR - PROVIDER - SERVERE_EXCEPTION -> adminLogin:1 $e");
       showSnackbar(e.message);
-    } catch (e) {
-      devlogError("ERROR - PROVIDER - CATCH_ERROR -> adminLogin dfasdf: $e");
-      showSnackbar("Something went wrong.!");
+    } catch (e,st) {
+      devlogError("ERROR - PROVIDER - CATCH_ERROR -> adminLogin dfasdf: $e$st");
+      showSnackbar("Something went wrong.!---");
     } finally {
       if (listen) notifyListeners();
     }
+    if(isPageNavigation){
+      showPageNationLoader(false);
+    }
     return isSuccess;
+  }
+
+  Future<bool> visitsSearchApi(BuildContext context, {required String id, bool listen = true,String selectedDate = "",bool isPageNavigation = false}) async {
+    bool isSuccess = false;
+    // _visitData.clear();
+    // _allvisitData.clear();
+    notifyListeners();
+    try {
+      final isNetwork = await _networkService.isConnected;
+      if (isNetwork) {
+        if(isPageNavigation){
+          showPageNationLoader(true);
+        }
+        final currTime = Formatter.stringFromDateTime(DateTime.now(), format: "yyyy-MM-dd");
+        final req = VisitsRequest(
+          clientId: int.parse(id),
+          // date: selectedDate.isEmpty ? currTime! : selectedDate,
+          page: searchPage,
+          search:  searchController.text.trim()
+        );
+        final res = await _visitsRepo.VisitsDetails(req);
+        // isSuccess = res.first.companyId != null;
+        if(!isPageNavigation){
+          _visitData.clear();
+          _allvisitData.clear();
+        }
+        if(res != null && res.visits != null && res.visits.isNotEmpty){
+          _visitData.addAll(res.visits);
+          _allvisitData.addAll(res.visits.reversed.toList());
+        }else{
+          if(searchPage>1){
+            searchPage--;
+          }
+        }
+      } else {
+        devlog("client id : $id");
+        _visitData = context.read<HomeProvider>().offlineData?.clients?.where((element) => element.id?.toString() == id.toString()).firstOrNull?.visits ?? [];
+        _allvisitData = visitData.reversed.toList();
+        devlog("visit data : ${_visitData.length}");
+        devlog("_allvisitData data : ${_allvisitData.length}");
+        // showSnackbarError("No Internet Connection");
+
+        /// OR YOU CAN PERFORM OFFLINE ACTION SUCH AS OFFLINE DATA BASE
+      }
+    } on ServerException catch (e) {
+      devlogError("ERROR - PROVIDER - SERVERE_EXCEPTION -> adminLogin:1 $e");
+      showSnackbar(e.message);
+    } catch (e,st) {
+      devlogError("ERROR - PROVIDER - CATCH_ERROR -> adminLogin dfasdf: $e$st");
+      showSnackbar("Something went wrong.!---");
+    } finally {
+      if (listen) notifyListeners();
+    }
+    if(isPageNavigation){
+      showPageNationLoader(false);
+    }
+    return isSuccess;
+  }
+
+
+  void showPageNationLoader(isLoader) {
+    isPageNationLoader = isLoader;
+    notifyListeners();
   }
 
   /// Visit Task Add Api

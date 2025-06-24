@@ -63,6 +63,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '421075024065',
     projectId: 'evv-caretrack',
     storageBucket: 'evv-caretrack.firebasestorage.app',
-    iosBundleId: 'com.app.healthcare.RunnerTests',
+    iosBundleId: 'com.i-mbu.caretrack',
   );
 }

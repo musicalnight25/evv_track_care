@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -62,16 +63,41 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
 
   DateTime selectedDate = DateTime.now();
   DateTime startDate = DateTime.now().subtract(const Duration(days: 3));
+  ScrollController listViewController = ScrollController();
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((p) async {
+      showHomeLoader(true);
       showLoader(context);
+      final home = Provider.of<HomeProvider>(context, listen: false);
       await Provider.of<HomeProvider>(context, listen: false).companyDetailsApi();
       hideLoader();
+      showHomeLoader(false);
+      listViewController.addListener(() {
+        if (listViewController.position.pixels == listViewController.position.maxScrollExtent) {
+          if(home.searchController.text.toString().trim().isNotEmpty){
+            home.searchPage++;
+            home.companyDetailsSearchApi(isPageNavigation: true);
+          }else{
+            if(!home.isPageNationLoader){
+              home.page++;
+              home.companyDetailsApi(isPageNavigation: true);
+            }
+          }
+          home.notifyListeners();
+        }
+      });
   //    await Provider.of<HomeProvider>(context, listen: false).offlineFetchApi();
+    });
+  }
+
+  void showHomeLoader(bool isLoader) {
+    setState(() {
+      isLoading = isLoader;
     });
   }
 
@@ -187,10 +213,23 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                   child: TextField(
                                     controller: home.searchController,
                                     onChanged: (q) async {
-                                      await Provider.of<HomeProvider>(context,
-                                          listen: false)
-                                          .filterClients(
-                                          q, home.finalClientData);
+                                      if(home.isTimer?.isActive ?? false) {
+                                        home.isTimer?.cancel();
+                                      }
+                                      home.isTimer = Timer(const Duration(milliseconds: 300), () async {
+                                        if(q.isEmpty){
+                                          home.searchPage = 1;
+                                          home.page = 1;
+                                          home.notifyListeners();
+                                        }
+                                        await home.companyDetailsSearchApi();
+                                        home.notifyListeners();
+                                      });
+
+                                      // await Provider.of<HomeProvider>(context,
+                                      //     listen: false)
+                                      //     .filterClients(
+                                      //     q, home.finalClientData);
                                     },
                                     style: const TextStyle(
                                       color: AppColors.hint_text_color_dark,
@@ -267,57 +306,11 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                               ),
                             ),
                           ),*/
-                          Expanded(
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  if(home.clientData.isNotEmpty)
-                                    ...List.generate(
-                                      home.clientData.length,
-                                      (index) => home.clientData.isNotEmpty
-                                          ? Padding(
-                                              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.8.h),
-                                              child: GestureDetector(onTap: () async {
-                                                // showLoader(context);
-                                                // await Future.delayed(Duration(milliseconds: 600));
-                                                // hideLoader();
-                                                // await context.pushNamed(PatientDetailsScreenRoute(id: home.clientData[index].client?.id.toString() ?? "", clientListResponse: home.clientData[index]));
-                                                print("Client Data ${home.clientData[index].providerIdentification?.name}");
-                                                FocusManager.instance.primaryFocus?.unfocus();
-                                                print(home.clientData[index].client?.avatar);
-                                                print(home.clientData[index].client?.avatar);
-                                                devlog("clientAddressLine1 : ${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientAddressLine1}");
-                                                await context.pushNamed(DemoRoute(
-                                                    id: home.clientData[index].client!.id.toString(),
-                                                    name:
-                                                        "${home.clientData[index].client?.clientFirstName ?? ""} ${home.clientData[index].client?.clientMiddleInitial != null ? "${home.clientData[index].client?.clientMiddleInitial} " : ""}${home.clientData[index].client?.clientLastName}",
-                                                    location: home.clientData[index].client?.clientAddresses?.firstOrNull?.clientAddressLine1 == null
-                                                        ? "--"
-                                                        : "${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientAddressLine1 ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientAddressLine2 ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientCity ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientState ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientCounty ?? ""}",
-                                                    client: home.clientData[index].client!,
-                                                    lat: home.clientData[index].clientAddress?.firstOrNull!.clientAddressLatitude?.toDouble(),
-                                                    long: home.clientData[index].clientAddress?.firstOrNull!.clientAddressLongitude?.toDouble(),
-                                                    phone: home.clientData[index].clientPhone?.firstOrNull?.clientPhone.toString(),
-                                                    avatar: home.clientData[index].client?.avatar ?? ""));
-                                              }, child: Builder(builder: (context) {
-                                                return PatientInfoWidget(
-                                                  name:
-                                                      "${home.clientData[index].client?.clientFirstName ?? ""} ${home.clientData[index].client?.clientMiddleInitial != null ? "${home.clientData[index].client?.clientMiddleInitial} " : ""}${home.clientData[index].client?.clientLastName ?? ""}",
-                                                  imageUrl: home.clientData[index].client?.avatar,
-                                                  startTime:
-                                                      home.clientData[index].visitTime?.firstOrNull?.createdAt == null ? "" : home.clientData[index].visitTime?.firstOrNull?.createdAt.toString(),
-                                                  endTime: home.clientData[index].visitTime?.firstOrNull?.updatedAt == null ? "" : home.clientData[index].visitTime?.firstOrNull?.updatedAt.toString(),
-                                                  address:
-                                                      "${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientAddressLine1},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientAddressLine2 ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientCity ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientState ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientCounty ?? ""}",
-                                                );
-                                              })),
-                                            )
-                                          : const Center(
-                                              child: Txt(
-                                              "Data Not Found",
-                                              textColor: Colors.black,
-                                            ))),
-                                  if(home.clientData.isEmpty)
+                          if(home.clientData.isEmpty && !isLoading)
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
                                     Padding(
                                       padding: EdgeInsets.only(top: 15.h, right: 10.w, left: 10.w),
                                       child: Column(
@@ -332,11 +325,82 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                           ),
                                         ],
                                       ),
-                                    )
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          if(home.clientData.isNotEmpty)
+                            Expanded(
+                              child: Stack(
+                                children: [
+                                  ListView.builder(
+                                    padding:  home.isPageNationLoader
+                                        ? const EdgeInsets.only(bottom: 40)
+                                        : EdgeInsets.zero,
+                                    controller: listViewController,
+                                    itemCount: home.clientData.length,
+                                    itemBuilder: (context, index) {
+                                      return home.clientData.isNotEmpty
+                                          ? Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.8.h),
+                                        child: GestureDetector(onTap: () async {
+                                          // showLoader(context);
+                                          // await Future.delayed(Duration(milliseconds: 600));
+                                          // hideLoader();
+                                          // await context.pushNamed(PatientDetailsScreenRoute(id: home.clientData[index].client?.id.toString() ?? "", clientListResponse: home.clientData[index]));
+                                          // print("Client Data ${home.clientData[index].providerIdentification?.name}");
+                                          FocusManager.instance.primaryFocus?.unfocus();
+                                          print(home.clientData[index].client?.avatar);
+                                          print(home.clientData[index].client?.avatar);
+                                          devlog("clientAddressLine1 : ${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientAddressLine1}");
+                                          await context.pushNamed(DemoRoute(
+                                              id: home.clientData[index].client!.id.toString(),
+                                              name:
+                                              "${home.clientData[index].client?.clientFirstName ?? ""} ${home.clientData[index].client?.clientMiddleInitial != null ? "${home.clientData[index].client?.clientMiddleInitial} " : ""}${home.clientData[index].client?.clientLastName}",
+                                              location: home.clientData[index].client?.clientAddresses?.firstOrNull?.clientAddressLine1 == null
+                                                  ? "--"
+                                                  : "${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientAddressLine1 ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientAddressLine2 ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientCity ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientState ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientCounty ?? ""}",
+                                              client: home.clientData[index].client!,
+                                              lat: home.clientData[index].clientAddress?.firstOrNull!.clientAddressLatitude?.toDouble(),
+                                              long: home.clientData[index].clientAddress?.firstOrNull!.clientAddressLongitude?.toDouble(),
+                                              phone: home.clientData[index].clientPhone?.firstOrNull?.clientPhone.toString(),
+                                              avatar: home.clientData[index].client?.avatar ?? ""));
+                                        }, child: Builder(builder: (context) {
+                                          return PatientInfoWidget(
+                                            name:
+                                            "${home.clientData[index].client?.clientFirstName ?? ""} ${home.clientData[index].client?.clientMiddleInitial != null ? "${home.clientData[index].client?.clientMiddleInitial} " : ""}${home.clientData[index].client?.clientLastName ?? ""}",
+                                            imageUrl: home.clientData[index].client?.avatar,
+                                            startTime:
+                                            home.clientData[index].visitTime?.firstOrNull?.createdAt == null ? "" : home.clientData[index].visitTime?.firstOrNull?.createdAt.toString(),
+                                            endTime: home.clientData[index].visitTime?.firstOrNull?.updatedAt == null ? "" : home.clientData[index].visitTime?.firstOrNull?.updatedAt.toString(),
+                                            address:
+                                            "${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientAddressLine1},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientAddressLine2 ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientCity ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientState ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientCounty ?? ""}",
+                                          );
+                                        })),
+                                      )
+                                          : const Center(
+                                          child: Txt(
+                                            "Data Not Found",
+                                            textColor: Colors.black,
+                                          ));
+                                    },
+                                  ),
+                                  if(home.isPageNationLoader)
+                                  const Positioned(
+                                      right: 0,
+                                      left: 0,
+                                      bottom: 0,
+                                      child: Column(
+                                        children: [
+                                          CircularProgressIndicator(
+                                            color: AppColors.Primary,
+                                          ),
+                                        ],
+                                      ))
                                 ],
                               ),
                             ),
-                          ),
                         ],
                       ),
                     ),
@@ -411,6 +475,10 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                     child: CustomElevatedButton(
                         onTap: () {
                           context.read<AuthProvider>().logout(context);
+                         final home = Provider.of<HomeProvider>(context, listen: false);
+                          home.clientData.clear();
+                          home.finalClientData.clear();
+                          home.notifyListeners();
                         },
                         color: Colors.red,
                         border: ButtonBorder(width: 0, color: Colors.red),

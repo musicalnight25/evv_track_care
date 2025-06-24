@@ -29,5 +29,7 @@ class Apis {
   static const services = "/company/services";
   static const offline_fetch = "/fetch-offline";
   static const sync_offline = "/sync-offline";
+  static const clientsSearch = "/clients/search";
+  static const clientsVisitsSearch = "/clients/visits/search";
 
 }

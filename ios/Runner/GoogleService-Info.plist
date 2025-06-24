@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.app.healthcare.RunnerTests</string>
+	<string>com.i-mbu.caretrack</string>
 	<key>PROJECT_ID</key>
 	<string>evv-caretrack</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:421075024065:ios:29256af33babfe75017c40</string>
+	<string>1:421075024065:ios:d098f4328dd6902c017c40</string>
 </dict>
 </plist>

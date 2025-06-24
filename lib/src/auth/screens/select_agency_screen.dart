@@ -1,4 +1,5 @@
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:healthcare/config/routes/app_router/route_extensions.dart';
 import 'package:healthcare/config/routes/app_router/route_params.dart';
@@ -143,6 +144,10 @@ class _SelectAgencyScreenState extends State<SelectAgencyScreen> with AutomaticK
                     ),
                   ),
                 ),
+                if(kDebugMode && auth.companies.isEmpty)
+                  GestureDetector(onTap: () {
+                    context.read<AuthProvider>().logout(context);
+                  },child: const Text("No Agencies Found")),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
                   child: SizedBox(

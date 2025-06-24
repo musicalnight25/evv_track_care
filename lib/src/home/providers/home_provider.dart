@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:healthcare/core/constants/app_constants.dart';
 import 'package:healthcare/core/data/models/requests/company_details_reqs/offline_data_fatch_req.dart';
@@ -36,14 +39,19 @@ class HomeProvider extends ChangeNotifier {
   String get companyName => _companyName;
   String _companyName = "";
 
+  Timer? isTimer;
+  int page = 1;
+  int searchPage = 1;
+  bool isPageNationLoader = false;
+
   /// Search
 
   filterClients(String query, List<ClientListResponse> clients) {
     _clientData = clients.where((client) {
       final lowerCaseQuery = query.toLowerCase();
-      return client.client!.clientFirstName!.toLowerCase().contains(lowerCaseQuery) ||
-          client.client!.clientMiddleInitial!.toLowerCase().contains(lowerCaseQuery) ||
-          client.client!.clientLastName!.toLowerCase().contains(lowerCaseQuery);
+      return (client.client!.clientFirstName ?? '').toLowerCase().contains(lowerCaseQuery) ||
+          (client.client!.clientMiddleInitial ?? '').toLowerCase().contains(lowerCaseQuery) ||
+          (client.client!.clientLastName ?? '').toLowerCase().contains(lowerCaseQuery);
     }).toList();
 
     notifyListeners();
@@ -57,18 +65,78 @@ class HomeProvider extends ChangeNotifier {
   /// Company Client List Details Api
   ///
 
-  Future<bool> companyDetailsApi({bool listen = true}) async {
+  Future<bool> companyDetailsApi({bool listen = true,bool isPageNavigation = false}) async {
     bool isSuccess = false;
     try {
       final isNetwork = await _networkService.isConnected;
       if (isNetwork) {
+        if(isPageNavigation){
+          showPageNationLoader(true);
+        }
         final companyId = _sp.getString(AppConsts.companyId);
-        final req = ComanyDetailsReqs(companyId: companyId ?? "2");
+        final req = ComanyDetailsReqs(companyId: companyId ?? "2",page: page,search: searchController.text.trim());
         final res = await _homeRepo.companyDetails(req);
         //   isSuccess = res.company != null;
         _companyName = _sp.getString(AppConsts.companyName)!;
-        _clientData = res;
-        _finalClientData = res;
+        if(res.isEmpty){
+          if(page>1){
+            page--;
+          }
+        }else{
+          _clientData.addAll(res);
+          _finalClientData.addAll(res);
+        }
+      } else {
+        // await offlineFetchApi();
+        setCompanyName();
+        _clientData = offlineData?.clients ?? [];
+        _finalClientData = offlineData?.clients ?? [];
+        devlog("offline data for clients  : ${_clientData?.firstOrNull?.clientAddress?.first?.clientAddressLine1}");
+        devlog("offline data for clients  : ${offlineData?.clients?.firstOrNull?.clientAddress?.first?.clientAddressLine1}");
+        // showSnackbarError("No Internet Connection");
+
+        /// OR YOU CAN PERFORM OFFLINE ACTION SUCH AS OFFLINE DATA BASE
+      }
+    } on ServerException catch (e) {
+      devlogError("ERROR - PROVIDER - SERVERE_EXCEPTION -> adminLogin: $e");
+      showSnackbar(e.message);
+    } catch (e) {
+      devlogError("ERROR - PROVIDER - CATCH_ERROR -> adminLogin kiykjdy: $e");
+      showSnackbar("Something went wrong.!");
+    } finally {
+      if (listen) notifyListeners();
+    }
+    if(isPageNavigation){
+      showPageNationLoader(false);
+    }
+    return isSuccess;
+  }
+
+  Future<bool> companyDetailsSearchApi({bool listen = true,bool isPageNavigation = false}) async {
+    bool isSuccess = false;
+    try {
+      final isNetwork = await _networkService.isConnected;
+      if (isNetwork) {
+        if(isPageNavigation){
+          showPageNationLoader(true);
+        }
+        final companyId = _sp.getString(AppConsts.companyId);
+        final req = ComanyDetailsReqs(companyId: companyId ?? "2",page: searchPage,search: searchController.text.trim());
+        final res = await _homeRepo.companyDetails(req);
+        //   isSuccess = res.company != null;
+        _companyName = _sp.getString(AppConsts.companyName)!;
+        if(!isPageNavigation){
+          _clientData.clear();
+          _finalClientData.clear();
+        }
+        if(res.isEmpty){
+          if(searchPage>1){
+            searchPage--;
+          }
+        }else{
+          _clientData.addAll(res);
+          _finalClientData.addAll(res);
+        }
       } else {
         // await offlineFetchApi();
         setCompanyName();
@@ -90,7 +158,16 @@ class HomeProvider extends ChangeNotifier {
       if (listen) notifyListeners();
     }
 
+    if(isPageNavigation){
+      showPageNationLoader(false);
+    }
+
     return isSuccess;
+  }
+
+ void showPageNationLoader(isLoader) {
+    isPageNationLoader = isLoader;
+    notifyListeners();
   }
 
   /// Single Company Details APi

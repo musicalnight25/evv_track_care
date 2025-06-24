@@ -26,7 +26,7 @@ abstract interface class VisitsRepo {
   ///
   ///
 
-  Future<ClientVisitsResponse> VisitsDetails(VisitsRequest _);
+  Future<ClientVisitsResponse?> VisitsDetails(VisitsRequest _);
   Future<ClientVisitAddResponse> ClientVisitAdd(ClientVisitsAddRequest _);
   Future<ClientVisitTaskAddResponse> ClientVisitTaskAdd(ClientVisitsTaskAddRequest _);
   Future<ClientResponse> ClientDetails(GetClientsDetailsReq _);

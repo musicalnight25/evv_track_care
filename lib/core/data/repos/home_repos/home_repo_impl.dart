@@ -21,7 +21,7 @@ class HomeRepoImpl implements HomeRepo {
   @override
   Future<List<ClientListResponse>> companyDetails(ComanyDetailsReqs req) async {
     try {
-      final res = await _dioClient.post(Apis.clients, data: req.toJson(), contentType: CType.json);
+      final res = await _dioClient.post(Apis.clientsSearch, data: req.toJson(), contentType: CType.json);
 
 // Casting the response data to List<VisitDataResponse>
       if (res.data != null && res.data is List?) {
@@ -34,8 +34,8 @@ class HomeRepoImpl implements HomeRepo {
       // return modelRes;
     } on ServerException catch (e) {
       throw ServerException(e.message);
-    } catch (e) {
-      print("Error : $e");
+    } catch (e,st) {
+      print("Error : $e--$st");
       throw const ServerException("Something went wrong.!");
     }
   }

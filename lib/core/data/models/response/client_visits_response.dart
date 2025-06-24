@@ -3,9 +3,9 @@ class ClientVisitsResponse {
 
   ClientVisitsResponse({required this.visits});
 
-  factory ClientVisitsResponse.fromJson(Map<String, dynamic> json) {
+  factory ClientVisitsResponse.fromJson(List<dynamic> json) {
     return ClientVisitsResponse(
-      visits: List<Visit>.from(json['visits'].map((x) => Visit.fromJson(x))),
+      visits: json.map((x) => Visit.fromJson(x['visits'])).toList(),
     );
   }
 
@@ -125,8 +125,8 @@ class Visit {
       modifier3: json['Modifier3'],
       modifier4: json['Modifier4'],
       visitTimeZone: json['VisitTimeZone'],
-      scheduleStartTime:json['ScheduleStartTime'] != null ? DateTime.parse(json['ScheduleStartTime']) : DateTime.now(),
-      scheduleEndTime: json['ScheduleEndTime'] != null ?DateTime.parse(json['ScheduleEndTime']):DateTime.now(),
+      scheduleStartTime:json['ScheduleStartTime'] != null ? DateTime.parse(json['ScheduleStartTime']) : null,
+      scheduleEndTime: json['ScheduleEndTime'] != null ?DateTime.parse(json['ScheduleEndTime']):null,
       contingencyPlan: json['ContingencyPlan'],
       reschedule: json['Reschedule'],
       adjInDateTime: json['AdjInDateTime'] != null ? DateTime.parse(json['AdjInDateTime']) : null,

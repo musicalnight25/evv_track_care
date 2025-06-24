@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:core';
 import 'dart:developer';
@@ -71,26 +72,53 @@ class _DemoScreenState extends State<DemoScreen> with AutomaticKeepAliveClientMi
   DateTime startDate = DateTime.now().subtract(const Duration(days: 3));
 
   List<Clients> clientData = [];
+  ScrollController listViewController = ScrollController();
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((p) async {
+      showHomeLoader(true);
       showLoader(context);
       print(widget.params.id.toString());
       print("widget.params.id.toString()");
+      final visit = Provider.of<DemoProvider>(context, listen: false);
+      visit.page = 1;
+      visit.searchPage = 1;
+      visit.setSelectedDate(DateTime.now());
       await Provider.of<DemoProvider>(context, listen: false).visitsApi(context, id: widget.params.id.toString());
       await Provider.of<DemoProvider>(context, listen: false).clientDetailsApi(context,clientId: widget.params.client?.id.toString(),companyId: widget.params.client?.companyId.toString());
       final currTime = Formatter.stringFromDateTime(DateTime.now(), format: "yyyy-MM-dd");
-      await Provider.of<DemoProvider>(context, listen: false).getDataDateWise(currTime.toString());
+      // await Provider.of<DemoProvider>(context, listen: false).getDataDateWise(currTime.toString());
       await Provider.of<DemoProvider>(context, listen: false).serviceListApi(context);
 
       hideLoader();
-
+      showHomeLoader(false);
+      listViewController.addListener(() {
+        if (listViewController.position.pixels == listViewController.position.maxScrollExtent) {
+          if(visit.searchController.text.toString().trim().isNotEmpty){
+            visit.searchPage++;
+            visit.visitsSearchApi(context, id: widget.params.id.toString(),isPageNavigation: true);
+          }else{
+            if(!visit.isPageNationLoader){
+              visit.page++;
+              visit.visitsApi(context, id: widget.params.id.toString(),isPageNavigation: true,);
+            }
+          }
+          visit.notifyListeners();
+        }
+      });
       //  clientData = await loadClients() as List<Clients>;
 
       setState(() {});
+    });
+  }
+
+  void showHomeLoader(bool isLoader) {
+    setState(() {
+      isLoading = isLoader;
     });
   }
 
@@ -245,8 +273,16 @@ class _DemoScreenState extends State<DemoScreen> with AutomaticKeepAliveClientMi
 
                                 print("Selected Date ${visit.selectedDate}");
                                 setState(() {});
-
-                                await Provider.of<DemoProvider>(context, listen: false).getDataDateWise(visit.selectedDate.toString());
+                                visit.page = 1;
+                                visit.searchPage = 1;
+                                visit.visitData.clear();
+                                visit.allvisitData.clear();
+                                final selectedDate = Formatter.stringFromDateTime(visit.selectedDate, format: "yyyy-MM-dd");
+                                await Provider.of<DemoProvider>(context,
+                                        listen: false).visitsApi(context,
+                                        id: widget.params.id.toString(),
+                                        );
+                                // await Provider.of<DemoProvider>(context, listen: false).getDataDateWise(visit.selectedDate.toString());
                               },
                               child: isSelected
                                   ? Container(
@@ -317,8 +353,64 @@ class _DemoScreenState extends State<DemoScreen> with AutomaticKeepAliveClientMi
                           },
                         ),
                       ),
+                   /*   SizedBox(
+                        height: 2.h,
+                      ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 25,vertical: 10),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(9),
+                            border: Border.all(
+                                color: AppColors.appGreyLight,
+                                width: 0.7
+                            )
+                        ),
+                        child: Row(
+                          children: [
+                            const SizedBox(width: 10,),
+                            const AppImageAsset(image: AppIcons.ic_search),
+                            Expanded(
+                              child: TextField(
+                                controller: visit.searchController,
+                                onChanged: (q) async {
+                                  if(home.isTimer?.isActive ?? false) {
+                                    visit.isTimer?.cancel();
+                                  }
+                                  visit.isTimer = Timer(const Duration(milliseconds: 400), () async {
+                                    if(q.isEmpty){
+                                      visit.searchPage = 1;
+                                      visit.page = 1;
+                                      visit.notifyListeners();
+                                    }
+                                    await visit.visitsSearchApi(context, id: widget.params.id.toString());
+                                    visit.notifyListeners();
+                                  });
+                                },
+                                style: const TextStyle(
+                                  color: AppColors.hint_text_color_dark,
+                                  fontSize: 14,
+                                  fontFamily: 'HurmeGeometricSans1',
+                                ),
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Search',
+                                  hintStyle: const TextStyle(
+                                    color: AppColors.hint_text_color_dark,
+                                    fontSize: 14,
+                                    fontFamily: 'HurmeGeometricSans1',
+                                  ),
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 2.w,
+                                  ),
+                                ),
+
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),*/
                       SizedBox(
-                        height: 2.5.h,
+                        height: 2.2.h,
                       ),
                       const Txt(
                         "Visit List",
@@ -327,52 +419,11 @@ class _DemoScreenState extends State<DemoScreen> with AutomaticKeepAliveClientMi
                         textColor: AppColors.black,
                       ),
                       const SizedBox(height: 5),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              if(visit.visitData.isNotEmpty)...[
-                                ...List.generate(
-                                    visit.visitData.length,
-                                        (index) => Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.8.h),
-                                      child: GestureDetector(
-                                          onTap: () async {
-                                            showLoader(context);
-                                            await Future.delayed(const Duration(milliseconds: 300));
-                                            hideLoader();
-                                            log('visit.visitData[index].id.toString() ${visit.visitData[index].toJson()}');
-                                            await context.pushNamed(PatientDetailsScreenRoute(
-                                                id: visit.visitData[index].id.toString(),
-                                                clientId: widget.params.id,
-                                                companyId: widget.params.client?.companyId.toString() ?? "",
-                                                name: widget.params.name,
-                                                // startTime: visit.visitData[index].scheduleStartTime.toString(),
-                                                // endTime: visit.visitData[index].scheduleEndTime?.toString() ?? "",
-                                                startTime: visit.visitData[index].adjInDateTime.toString(),
-                                                endTime: visit.visitData[index].adjOutDateTime?.toString() ?? "",
-                                                clientListResponse: ClientListResponse(),
-                                                status: visit.visitData[index].status == "completed",
-                                                imageUrl: widget.params.avatar ?? ""));
-                                            //  await context.pushNamed(PatientDetailsScreenRoute(id:clientData[index].clientID ) );
-                                          },
-                                          child: Stack(
-                                            children: [
-                                              VisitsInfoWidget(
-                                                name: widget.params.name ?? "",
-                                                imageUrl: widget.params.avatar ?? "",
-                                                startTime: visit.visitData[index].scheduleStartTime.toString() ?? "",
-                                                endTime: visit.visitData[index].scheduleEndTime?.toString() ?? "",
-                                                location: widget.params.location.toString() ?? "",
-                                                status: visit.visitData[index].status.toString() ?? "",
-                                              ),
-                                              // Text('${visit.visitData[index].scheduleStartTime}')
-                                            ],
-                                          )),
-                                    )),
-                                SizedBox(height: 10.h),
-                              ]
-                              else...[
+                      if(visit.visitData.isEmpty && !isLoading)
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
                                 Padding(
                                   padding: EdgeInsets.only(top: 13.h, right: 10.w, left: 10.w),
                                   child: Column(
@@ -408,11 +459,76 @@ class _DemoScreenState extends State<DemoScreen> with AutomaticKeepAliveClientMi
                                     ],
                                   ),
                                 ),
-                              ]
+                              ],
+                            ),
+                          ),
+                        ),
+                      if(visit.visitData.isNotEmpty)...[
+                        Expanded(
+                          child: Stack(
+                            children: [
+                              ListView.builder(
+                                padding:  visit.isPageNationLoader
+                                    ? const EdgeInsets.only(bottom: 40)
+                                    : EdgeInsets.zero,
+                                controller: listViewController,
+                                itemCount: visit.visitData.length,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.8.h),
+                                    child: GestureDetector(
+                                        onTap: () async {
+                                          showLoader(context);
+                                          await Future.delayed(const Duration(milliseconds: 300));
+                                          hideLoader();
+                                          log('visit.visitData[index].id.toString() ${visit.visitData[index].toJson()}');
+                                          await context.pushNamed(PatientDetailsScreenRoute(
+                                              id: visit.visitData[index].id.toString(),
+                                              clientId: widget.params.id,
+                                              companyId: widget.params.client?.companyId.toString() ?? "",
+                                              name: widget.params.name,
+                                              // startTime: visit.visitData[index].scheduleStartTime.toString(),
+                                              // endTime: visit.visitData[index].scheduleEndTime?.toString() ?? "",
+                                              startTime: visit.visitData[index].adjInDateTime.toString(),
+                                              endTime: visit.visitData[index].adjOutDateTime?.toString() ?? "",
+                                              clientListResponse: ClientListResponse(),
+                                              status: visit.visitData[index].status == "completed",
+                                              imageUrl: widget.params.avatar ?? ""));
+                                          //  await context.pushNamed(PatientDetailsScreenRoute(id:clientData[index].clientID ) );
+                                        },
+                                        child: Stack(
+                                          children: [
+                                            VisitsInfoWidget(
+                                              name: widget.params.name ?? "",
+                                              imageUrl: widget.params.avatar ?? "",
+                                              startTime: visit.visitData[index].scheduleStartTime.toString(),
+                                              endTime: visit.visitData[index].scheduleEndTime?.toString() ?? "",
+                                              location: widget.params.location.toString() ?? "",
+                                              status: visit.visitData[index].status.toString() ?? "",
+                                              startDate: visit.visitData[index].createdAt.toString() ?? "",
+                                            ),
+                                            // Text('${visit.visitData[index].scheduleStartTime}')
+                                          ],
+                                        )),
+                                  );
+                                },
+                              ),
+                              if(visit.isPageNationLoader)
+                                const Positioned(
+                                    right: 0,
+                                    left: 0,
+                                    bottom: 0,
+                                    child: Column(
+                                      children: [
+                                        CircularProgressIndicator(
+                                          color: AppColors.Primary,
+                                        ),
+                                      ],
+                                    ))
                             ],
                           ),
                         ),
-                      ),
+                      ],
                       Align(
                         alignment: Alignment.bottomLeft,
                         child: Row(
