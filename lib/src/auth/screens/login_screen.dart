@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:healthcare/core/common/widgets/app_image_assets.dart';
@@ -23,7 +22,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../config/routes/app_router/route_params.dart';
 import '../../../config/routes/routes.dart';
-import '../../../core/common/widgets/svg_image.dart';
+import '../../../core/helper/remote_config_helper.dart';
 
 class LoginRoute implements BaseRoute {
   @override
@@ -57,19 +56,15 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (kDebugMode) {
-        //   emailctr.text = "ann.muller@swiftdata.test";
-        // emailctr.text = "allenbaiyee@gmail.com";//"""viralmer51@gmail.com";
-        // passwordctr.text = "ann.muller@swiftdata.test";
-        // passwordctr.text = "#iMbu2017!";//"jlKbKDc07";
-      }
+      checkRemoteConfig(context);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.dark.copyWith(statusBarColor: AppColors.white),
+      value:
+          SystemUiOverlayStyle.dark.copyWith(statusBarColor: AppColors.white),
       child: PopScope(
         canPop: false,
         onPopInvoked: (didPop) {
@@ -93,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Container(
                               height: 280,
                               alignment: Alignment.topCenter,
-                              decoration:  const BoxDecoration(
+                              decoration: const BoxDecoration(
                                 color: AppColors.white,
                                 image: DecorationImage(
                                   alignment: Alignment.topCenter,
@@ -107,8 +102,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       VGap(2.h),
                       const Center(
-                        child: AppImageAsset(image: AppIcons.logoSvg,
-                        height: 46,
+                        child: AppImageAsset(
+                          image: AppIcons.logoSvg,
+                          height: 46,
                         ),
                       ),
                       VGap(7.h),
@@ -127,7 +123,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           radius: 11,
                           ctr: emailctr,
                           fontSize: 14,
-                          contentPadding: EdgeInsets.symmetric(vertical: 2.5.h, horizontal: 5.w),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 2.5.h, horizontal: 5.w),
                           labelText: "Email",
                         ),
                       ),
@@ -140,7 +137,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           lines: 1,
                           obsecuredText: passwordShow,
                           fontSize: 14,
-                          contentPadding: EdgeInsets.symmetric(vertical: 2.5.h, horizontal: 5.w),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 2.5.h, horizontal: 5.w),
                           labelText: "Password",
                           suffixIcon: GestureDetector(
                             onTap: () {
@@ -150,7 +148,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: const Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                AppImageAsset(image: AppIcons.ic_eye, height: 14, width: 24),
+                                AppImageAsset(
+                                    image: AppIcons.ic_eye,
+                                    height: 14,
+                                    width: 24),
                               ],
                             ),
                           ),
@@ -166,24 +167,28 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.only(top: 4),
-                                child: GestureDetector(onTap: () {
-                                  isRemember = !isRemember;
-                                  setState(() {});
-                                },
+                                child: GestureDetector(
+                                  onTap: () {
+                                    isRemember = !isRemember;
+                                    setState(() {});
+                                  },
                                   child: Container(
                                     height: 20,
                                     width: 20,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(5),
-                                      color: isRemember
-                                          ? AppColors.Primary
-                                          : null,
+                                      color:
+                                          isRemember ? AppColors.Primary : null,
                                       border: Border.all(
                                         color: AppColors.Primary,
                                       ),
                                     ),
                                     child: isRemember
-                                        ? const Icon(Icons.check, color: AppColors.white, size: 15,)
+                                        ? const Icon(
+                                            Icons.check,
+                                            color: AppColors.white,
+                                            size: 15,
+                                          )
                                         : null,
                                   ),
                                 ),
@@ -240,8 +245,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       email: emailctr.text.trim(),
                                       password: passwordctr.text.trim(),
                                       listen: false,
-                                  isRememberMe: isRemember
-                                  );
+                                      isRememberMe: isRemember);
                                   log('res: $res');
                                   hideLoader();
                                   if (res) await auth.skipScreen(context);
@@ -291,14 +295,14 @@ class LeftTriangleClipper extends CustomClipper<Path> {
   }
 }
 
-
 class DiagonalClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     Path path = Path();
     path.moveTo(0, 0); // Start at top-left
     path.lineTo(0, size.height); // Down to bottom-left
-    path.lineTo(size.width, size.height - 80); // Diagonal up to bottom-right with offset
+    path.lineTo(size.width,
+        size.height - 80); // Diagonal up to bottom-right with offset
     path.lineTo(size.width, 0); // Top-right
     path.close(); // Close the path
     return path;

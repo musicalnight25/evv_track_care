@@ -21,9 +21,9 @@ import 'package:provider/provider.dart';
 
 import '../../../config/routes/routes.dart';
 import '../../../core/common/widgets/custom_elevated_button.dart';
-import '../../../core/common/widgets/svg_image.dart';
 import '../../../core/data/models/response/clients_list_response.dart';
 import '../../../core/helper/loader.dart';
+import '../../../core/helper/remote_config_helper.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../auth/screens/select_agency_screen.dart';
 import '../../demo/screens/visits_screen.dart';
@@ -57,7 +57,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMixin<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with AutomaticKeepAliveClientMixin<HomeScreen> {
   @override
   bool get wantKeepAlive => true;
 
@@ -71,19 +72,22 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((p) async {
+      checkRemoteConfig(context);
       showHomeLoader(true);
       showLoader(context);
       final home = Provider.of<HomeProvider>(context, listen: false);
-      await Provider.of<HomeProvider>(context, listen: false).companyDetailsApi();
+      await Provider.of<HomeProvider>(context, listen: false)
+          .companyDetailsApi();
       hideLoader();
       showHomeLoader(false);
       listViewController.addListener(() {
-        if (listViewController.position.pixels == listViewController.position.maxScrollExtent) {
-          if(home.searchController.text.toString().trim().isNotEmpty){
+        if (listViewController.position.pixels ==
+            listViewController.position.maxScrollExtent) {
+          if (home.searchController.text.toString().trim().isNotEmpty) {
             home.searchPage++;
             home.companyDetailsSearchApi(isPageNavigation: true);
-          }else{
-            if(!home.isPageNationLoader){
+          } else {
+            if (!home.isPageNationLoader) {
               home.page++;
               home.companyDetailsApi(isPageNavigation: true);
             }
@@ -91,7 +95,8 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
           home.notifyListeners();
         }
       });
-  //    await Provider.of<HomeProvider>(context, listen: false).offlineFetchApi();
+
+      //    await Provider.of<HomeProvider>(context, listen: false).offlineFetchApi();
     });
   }
 
@@ -102,7 +107,8 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   }
 
   Future<List<Clients>> loadClients() async {
-    final String response = await rootBundle.loadString('assets/json/client_data.json');
+    final String response =
+        await rootBundle.loadString('assets/json/client_data.json');
     final List<dynamic> data = json.decode(response);
     print("Data of Client  ${data.first}");
     return data.map((client) => Clients.fromJson(client)).toList();
@@ -113,7 +119,8 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     super.build(context);
     return NetworkCheckerWidget(
       child: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.dark.copyWith(statusBarColor: AppColors.bgColor),
+        value: SystemUiOverlayStyle.dark
+            .copyWith(statusBarColor: AppColors.bgColor),
         child: Scaffold(
           body: SafeArea(
             child: Consumer<HomeProvider>(builder: (context, home, _) {
@@ -141,7 +148,8 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                           ),
                           Container(
                             margin: const EdgeInsets.symmetric(horizontal: 25),
-                            padding: const EdgeInsets.symmetric(vertical: 14,horizontal: 10),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 14, horizontal: 10),
                             decoration: BoxDecoration(
                               color: AppColors.bgColor,
                               borderRadius: BorderRadius.circular(9),
@@ -155,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                   fontSize: 15,
                                   fontWeight: FontWeight.w700,
                                 ),
-                                 Expanded(
+                                Expanded(
                                   child: Txt(
                                     home.companyName ?? "",
                                     fontSize: 15,
@@ -171,17 +179,20 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                     InkWell(
                                         onTap: () {
                                           if (context.isConnected) {
-                                            context.pushNamedAndRemoveUntil(const SelectAgencyRoute(), (r) => false);
+                                            context.pushNamedAndRemoveUntil(
+                                                const SelectAgencyRoute(),
+                                                (r) => false);
                                           } else {
-                                            showSnackbarError("No Internet Connection.!");
+                                            showSnackbarError(
+                                                "No Internet Connection.!");
                                           }
                                         },
-                                        child: const AppImageAsset(image: AppIcons.ic_more,
-                                        height: 15,
+                                        child: const AppImageAsset(
+                                          image: AppIcons.ic_more,
+                                          height: 15,
                                           width: 10,
                                           fit: BoxFit.contain,
-                                        )
-                                    ),
+                                        )),
                                   ],
                                 )
                               ],
@@ -197,27 +208,29 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                             textColor: AppColors.black,
                           ),
                           Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 25,vertical: 10),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 25, vertical: 10),
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(9),
-                              border: Border.all(
-                                color: AppColors.appGreyLight,
-                                width: 0.7
-                              )
-                            ),
+                                borderRadius: BorderRadius.circular(9),
+                                border: Border.all(
+                                    color: AppColors.appGreyLight, width: 0.7)),
                             child: Row(
                               children: [
-                                const SizedBox(width: 10,),
+                                const SizedBox(
+                                  width: 10,
+                                ),
                                 const AppImageAsset(image: AppIcons.ic_search),
                                 Expanded(
                                   child: TextField(
                                     controller: home.searchController,
                                     onChanged: (q) async {
-                                      if(home.isTimer?.isActive ?? false) {
+                                      if (home.isTimer?.isActive ?? false) {
                                         home.isTimer?.cancel();
                                       }
-                                      home.isTimer = Timer(const Duration(milliseconds: 300), () async {
-                                        if(q.isEmpty){
+                                      home.isTimer = Timer(
+                                          const Duration(milliseconds: 300),
+                                          () async {
+                                        if (q.isEmpty) {
                                           home.searchPage = 1;
                                           home.page = 1;
                                           home.notifyListeners();
@@ -248,13 +261,12 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                         horizontal: 2.w,
                                       ),
                                     ),
-
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                        /*  Padding(
+                          /*  Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
                               decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0), border: Border.all(width: 1)),
@@ -306,16 +318,18 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                               ),
                             ),
                           ),*/
-                          if(home.clientData.isEmpty && !isLoading)
+                          if (home.clientData.isEmpty && !isLoading)
                             Expanded(
                               child: SingleChildScrollView(
                                 child: Column(
                                   children: [
                                     Padding(
-                                      padding: EdgeInsets.only(top: 15.h, right: 10.w, left: 10.w),
+                                      padding: EdgeInsets.only(
+                                          top: 15.h, right: 10.w, left: 10.w),
                                       child: Column(
                                         children: [
-                                          Image.asset(AppIcons.ic_no_data, scale: 0.1),
+                                          Image.asset(AppIcons.ic_no_data,
+                                              scale: 0.1),
                                           Txt(
                                             "No client found in this company",
                                             fontSize: 2.5.t,
@@ -330,12 +344,12 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                 ),
                               ),
                             ),
-                          if(home.clientData.isNotEmpty)
+                          if (home.clientData.isNotEmpty)
                             Expanded(
                               child: Stack(
                                 children: [
                                   ListView.builder(
-                                    padding:  home.isPageNationLoader
+                                    padding: home.isPageNationLoader
                                         ? const EdgeInsets.only(bottom: 40)
                                         : EdgeInsets.zero,
                                     controller: listViewController,
@@ -343,61 +357,116 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                     itemBuilder: (context, index) {
                                       return home.clientData.isNotEmpty
                                           ? Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.8.h),
-                                        child: GestureDetector(onTap: () async {
-                                          // showLoader(context);
-                                          // await Future.delayed(Duration(milliseconds: 600));
-                                          // hideLoader();
-                                          // await context.pushNamed(PatientDetailsScreenRoute(id: home.clientData[index].client?.id.toString() ?? "", clientListResponse: home.clientData[index]));
-                                          // print("Client Data ${home.clientData[index].providerIdentification?.name}");
-                                          FocusManager.instance.primaryFocus?.unfocus();
-                                          print(home.clientData[index].client?.avatar);
-                                          print(home.clientData[index].client?.avatar);
-                                          devlog("clientAddressLine1 : ${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientAddressLine1}");
-                                          await context.pushNamed(DemoRoute(
-                                              id: home.clientData[index].client!.id.toString(),
-                                              name:
-                                              "${home.clientData[index].client?.clientFirstName ?? ""} ${home.clientData[index].client?.clientMiddleInitial != null ? "${home.clientData[index].client?.clientMiddleInitial} " : ""}${home.clientData[index].client?.clientLastName}",
-                                              location: home.clientData[index].client?.clientAddresses?.firstOrNull?.clientAddressLine1 == null
-                                                  ? "--"
-                                                  : "${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientAddressLine1 ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientAddressLine2 ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientCity ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientState ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientCounty ?? ""}",
-                                              client: home.clientData[index].client!,
-                                              lat: home.clientData[index].clientAddress?.firstOrNull!.clientAddressLatitude?.toDouble(),
-                                              long: home.clientData[index].clientAddress?.firstOrNull!.clientAddressLongitude?.toDouble(),
-                                              phone: home.clientData[index].clientPhone?.firstOrNull?.clientPhone.toString(),
-                                              avatar: home.clientData[index].client?.avatar ?? ""));
-                                        }, child: Builder(builder: (context) {
-                                          return PatientInfoWidget(
-                                            name:
-                                            "${home.clientData[index].client?.clientFirstName ?? ""} ${home.clientData[index].client?.clientMiddleInitial != null ? "${home.clientData[index].client?.clientMiddleInitial} " : ""}${home.clientData[index].client?.clientLastName ?? ""}",
-                                            imageUrl: home.clientData[index].client?.avatar,
-                                            startTime:
-                                            home.clientData[index].visitTime?.firstOrNull?.createdAt == null ? "" : home.clientData[index].visitTime?.firstOrNull?.createdAt.toString(),
-                                            endTime: home.clientData[index].visitTime?.firstOrNull?.updatedAt == null ? "" : home.clientData[index].visitTime?.firstOrNull?.updatedAt.toString(),
-                                            address:
-                                            "${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientAddressLine1},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientAddressLine2 ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientCity ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientState ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientCounty ?? ""}",
-                                          );
-                                        })),
-                                      )
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 4.w,
+                                                  vertical: 0.8.h),
+                                              child: GestureDetector(onTap:
+                                                  () async {
+                                                // showLoader(context);
+                                                // await Future.delayed(Duration(milliseconds: 600));
+                                                // hideLoader();
+                                                // await context.pushNamed(PatientDetailsScreenRoute(id: home.clientData[index].client?.id.toString() ?? "", clientListResponse: home.clientData[index]));
+                                                // print("Client Data ${home.clientData[index].providerIdentification?.name}");
+                                                FocusManager
+                                                    .instance.primaryFocus
+                                                    ?.unfocus();
+                                                print(home.clientData[index]
+                                                    .client?.avatar);
+                                                print(home.clientData[index]
+                                                    .client?.avatar);
+                                                devlog(
+                                                    "clientAddressLine1 : ${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientAddressLine1}");
+                                                await context.pushNamed(DemoRoute(
+                                                    id: home.clientData[index]
+                                                        .client!.id
+                                                        .toString(),
+                                                    name:
+                                                        "${home.clientData[index].client?.clientFirstName ?? ""} ${home.clientData[index].client?.clientMiddleInitial != null ? "${home.clientData[index].client?.clientMiddleInitial} " : ""}${home.clientData[index].client?.clientLastName}",
+                                                    location:
+                                                        home.clientData[index].client?.clientAddresses?.firstOrNull?.clientAddressLine1 == null
+                                                            ? "--"
+                                                            : "${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientAddressLine1 ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientAddressLine2 ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientCity ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientState ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientCounty ?? ""}",
+                                                    client: home
+                                                        .clientData[index]
+                                                        .client!,
+                                                    lat: home
+                                                        .clientData[index]
+                                                        .clientAddress
+                                                        ?.firstOrNull!
+                                                        .clientAddressLatitude
+                                                        ?.toDouble(),
+                                                    long: home
+                                                        .clientData[index]
+                                                        .clientAddress
+                                                        ?.firstOrNull!
+                                                        .clientAddressLongitude
+                                                        ?.toDouble(),
+                                                    phone: home
+                                                        .clientData[index]
+                                                        .clientPhone
+                                                        ?.firstOrNull
+                                                        ?.clientPhone
+                                                        .toString(),
+                                                    avatar: home.clientData[index].client?.avatar ?? ""));
+                                              }, child:
+                                                  Builder(builder: (context) {
+                                                return PatientInfoWidget(
+                                                  name:
+                                                      "${home.clientData[index].client?.clientFirstName ?? ""} ${home.clientData[index].client?.clientMiddleInitial != null ? "${home.clientData[index].client?.clientMiddleInitial} " : ""}${home.clientData[index].client?.clientLastName ?? ""}",
+                                                  imageUrl: home
+                                                      .clientData[index]
+                                                      .client
+                                                      ?.avatar,
+                                                  startTime: home
+                                                              .clientData[index]
+                                                              .visitTime
+                                                              ?.firstOrNull
+                                                              ?.createdAt ==
+                                                          null
+                                                      ? ""
+                                                      : home
+                                                          .clientData[index]
+                                                          .visitTime
+                                                          ?.firstOrNull
+                                                          ?.createdAt
+                                                          .toString(),
+                                                  endTime: home
+                                                              .clientData[index]
+                                                              .visitTime
+                                                              ?.firstOrNull
+                                                              ?.updatedAt ==
+                                                          null
+                                                      ? ""
+                                                      : home
+                                                          .clientData[index]
+                                                          .visitTime
+                                                          ?.firstOrNull
+                                                          ?.updatedAt
+                                                          .toString(),
+                                                  address:
+                                                      "${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientAddressLine1},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientAddressLine2 ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientCity ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientState ?? ""},${home.clientData[index].client?.clientAddresses?.firstOrNull?.clientCounty ?? ""}",
+                                                );
+                                              })),
+                                            )
                                           : const Center(
-                                          child: Txt(
-                                            "Data Not Found",
-                                            textColor: Colors.black,
-                                          ));
+                                              child: Txt(
+                                              "Data Not Found",
+                                              textColor: Colors.black,
+                                            ));
                                     },
                                   ),
-                                  if(home.isPageNationLoader)
-                                  const Positioned(
-                                      right: 0,
-                                      left: 0,
-                                      bottom: 0,
-                                      child: Column(
-                                        children: [
-                                          CircularProgressIndicator(
-                                            color: AppColors.Primary,
-                                          ),
-                                        ],
-                                      ))
+                                  if (home.isPageNationLoader)
+                                    const Positioned(
+                                        right: 0,
+                                        left: 0,
+                                        bottom: 0,
+                                        child: Column(
+                                          children: [
+                                            CircularProgressIndicator(
+                                              color: AppColors.Primary,
+                                            ),
+                                          ],
+                                        ))
                                 ],
                               ),
                             ),
@@ -405,11 +474,10 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 10),
+                        margin: EdgeInsets.only(top: 10),
                         height: 74,
-                        decoration: const BoxDecoration(
-                          color: AppColors.appGreyWhite
-                        ),
+                        decoration:
+                            const BoxDecoration(color: AppColors.appGreyWhite),
                         child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 4.w),
                           child: Row(
@@ -424,7 +492,8 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                                   if (context.isConnected) {
                                     _showLogoutDialog(context);
                                   } else {
-                                    showSnackbarError("No Internet Connection.!");
+                                    showSnackbarError(
+                                        "No Internet Connection.!");
                                   }
                                 },
                                 child: Icon(
@@ -456,7 +525,8 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(20.0)),
           ),
-          contentPadding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -475,7 +545,8 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                     child: CustomElevatedButton(
                         onTap: () {
                           context.read<AuthProvider>().logout(context);
-                         final home = Provider.of<HomeProvider>(context, listen: false);
+                          final home =
+                              Provider.of<HomeProvider>(context, listen: false);
                           home.clientData.clear();
                           home.finalClientData.clear();
                           home.notifyListeners();

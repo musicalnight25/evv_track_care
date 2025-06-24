@@ -1,6 +1,5 @@
-
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
 import 'package:healthcare/config/routes/app_router/route_extensions.dart';
 import 'package:healthcare/config/routes/app_router/route_params.dart';
 import 'package:healthcare/core/common/widgets/app_image_assets.dart';
@@ -13,13 +12,13 @@ import 'package:healthcare/core/utils/gap.dart';
 import 'package:healthcare/core/utils/size_config.dart';
 import 'package:healthcare/core/utils/text.dart';
 import 'package:healthcare/src/app_scaffold.dart';
-import 'package:flutter/material.dart';
 import 'package:healthcare/src/home/screens/home_screen.dart';
 import 'package:provider/provider.dart';
+
 import '../../../config/routes/routes.dart';
 import '../../../core/common/widgets/custom_elevated_button.dart';
-import '../../../core/common/widgets/svg_image.dart';
 import '../../../core/helper/loader.dart';
+import '../../../core/helper/remote_config_helper.dart';
 import '../../auth/providers/auth_provider.dart';
 
 class SelectAgencyRoute extends AppScaffoldRoute {
@@ -44,7 +43,8 @@ class SelectAgencyScreen extends StatefulWidget {
   State<SelectAgencyScreen> createState() => _SelectAgencyScreenState();
 }
 
-class _SelectAgencyScreenState extends State<SelectAgencyScreen> with AutomaticKeepAliveClientMixin<SelectAgencyScreen> {
+class _SelectAgencyScreenState extends State<SelectAgencyScreen>
+    with AutomaticKeepAliveClientMixin<SelectAgencyScreen> {
   @override
   bool get wantKeepAlive => true;
 
@@ -56,6 +56,7 @@ class _SelectAgencyScreenState extends State<SelectAgencyScreen> with AutomaticK
       showLoader(context);
       await Provider.of<AuthProvider>(context, listen: false).getAgency();
       hideLoader();
+      checkRemoteConfig(context);
       setState(() {});
     });
   }
@@ -72,8 +73,9 @@ class _SelectAgencyScreenState extends State<SelectAgencyScreen> with AutomaticK
               // crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 VGap(6.h),
-                const AppImageAsset(image: AppIcons.logoSvg,
-                height: 36,
+                const AppImageAsset(
+                  image: AppIcons.logoSvg,
+                  height: 36,
                   width: 139,
                 ),
                 VGap(3.h),
@@ -85,9 +87,11 @@ class _SelectAgencyScreenState extends State<SelectAgencyScreen> with AutomaticK
                 VGap(3.h),
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 1.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 15.w, vertical: 1.h),
                     child: GridView.builder(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2, // Number of columns
                         childAspectRatio: 0.98, // Adjust item height
                         crossAxisSpacing: 15,
@@ -105,14 +109,13 @@ class _SelectAgencyScreenState extends State<SelectAgencyScreen> with AutomaticK
                             alignment: Alignment.center,
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: AppColors.white,
+                                color: AppColors.white,
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
                                     color: index == auth.selectedIndex
                                         ? AppColors.lightSeaGreen
                                         : Colors.white,
-                                    width: 1)
-                            ),
+                                    width: 1)),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               // crossAxisAlignment: CrossAxisAlignment.center,
@@ -128,10 +131,9 @@ class _SelectAgencyScreenState extends State<SelectAgencyScreen> with AutomaticK
                                 Text(
                                   item.name,
                                   style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    letterSpacing: -0.3
-                                  ),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400,
+                                      letterSpacing: -0.3),
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   textAlign: TextAlign.center,
@@ -144,10 +146,12 @@ class _SelectAgencyScreenState extends State<SelectAgencyScreen> with AutomaticK
                     ),
                   ),
                 ),
-                if(kDebugMode && auth.companies.isEmpty)
-                  GestureDetector(onTap: () {
-                    context.read<AuthProvider>().logout(context);
-                  },child: const Text("No Agencies Found")),
+                if (kDebugMode && auth.companies.isEmpty)
+                  GestureDetector(
+                      onTap: () {
+                        context.read<AuthProvider>().logout(context);
+                      },
+                      child: const Text("No Agencies Found")),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
                   child: SizedBox(
@@ -156,8 +160,12 @@ class _SelectAgencyScreenState extends State<SelectAgencyScreen> with AutomaticK
                         onTap: () async {
                           if (auth.selectedIndex != null) {
                             final id = auth.selectedIndex;
-                            await auth.setCompanyId(context, auth.companies[id ?? 0].name.toString(), auth.companies[id ?? 0].id.toString());
-                            await context.pushNamedAndRemoveUntil(const HomeRoute(), (r) => false);
+                            await auth.setCompanyId(
+                                context,
+                                auth.companies[id ?? 0].name.toString(),
+                                auth.companies[id ?? 0].id.toString());
+                            await context.pushNamedAndRemoveUntil(
+                                const HomeRoute(), (r) => false);
                           } else {
                             showToast("Please select agency");
                           }

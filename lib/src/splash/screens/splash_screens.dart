@@ -1,22 +1,15 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:healthcare/core/common/widgets/app_image_assets.dart';
 import 'package:healthcare/core/constants/app_constants.dart';
-import 'package:healthcare/core/utils/gap.dart';
-import 'package:healthcare/core/utils/size_config.dart';
-import 'package:flutter/material.dart';
-import 'package:healthcare/core/utils/text.dart';
 // import 'package:healthcare/src/auth/screens/select_agency_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/common/widgets/svg_image.dart';
-import '../../../core/constants/color_constants.dart';
-import '../../../core/constants/image_constants.dart';
-import '../../../core/helper/remote_config_helper.dart';
-import '../../auth/providers/auth_provider.dart';
-import '../../auth/screens/login_screen.dart';
-
 import '../../../config/routes/app_router/route_params.dart';
 import '../../../config/routes/routes.dart';
+import '../../../core/constants/color_constants.dart';
+import '../../../core/constants/image_constants.dart';
+import '../../auth/providers/auth_provider.dart';
 
 class SplashRoute implements BaseRoute {
   @override
@@ -43,33 +36,40 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 2), () async {
-      await Future.delayed(Duration.zero,() {
-        RemoteConfigService.instance.getAppUpdateInfo(context);
-      },);
-      await Provider.of<AuthProvider>(context, listen: false).skipScreen(context);
+      // await Future.delayed(
+      //   Duration.zero,
+      //   () async {
+      //     await RemoteConfigService.instance.setupRemoteConfig();
+      //     RemoteConfigService.instance.getAppUpdateInfo(context);
+      //   },
+      // );
+      await Provider.of<AuthProvider>(context, listen: false)
+          .skipScreen(context);
+
       /// TOKEN BASED LOGIN
-    //    isToken ? context.pushNamedAndRemoveUntil(AppScaffoldRoute(), (route) => false) :  context.pushNamedAndRemoveUntil(LoginRoute(), (route) => false);
+      //    isToken ? context.pushNamedAndRemoveUntil(AppScaffoldRoute(), (route) => false) :  context.pushNamedAndRemoveUntil(LoginRoute(), (route) => false);
 
-    //    context.pushNamedAndRemoveUntil(AppScaffoldRoute(), (route) => false);
-
+      //    context.pushNamedAndRemoveUntil(AppScaffoldRoute(), (route) => false);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle.dark.copyWith(statusBarColor: AppColors.bgColor),
+      value:
+          SystemUiOverlayStyle.dark.copyWith(statusBarColor: AppColors.bgColor),
       child: Scaffold(
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           // mainAxisAlignment: MainAxisAlignment.center,
           children: [
-             AppImageAsset(image: AppImages.imgSplash,
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-               fit: BoxFit.cover,
+            AppImageAsset(
+              image: AppImages.imgSplash,
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              fit: BoxFit.cover,
             ),
-        /*    Row(
+            /*    Row(
               children: [
                 VGap(2.h),
               ],

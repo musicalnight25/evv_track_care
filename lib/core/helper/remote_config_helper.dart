@@ -13,6 +13,16 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import '../constants/api_constants.dart';
 
+Future checkRemoteConfig(BuildContext context) async {
+  await Future.delayed(
+    Duration.zero,
+    () async {
+      await RemoteConfigService.instance.setupRemoteConfig();
+      RemoteConfigService.instance.getAppUpdateInfo(context);
+    },
+  );
+}
+
 class RemoteConfigService {
   RemoteConfigService._privateConstructor();
 
@@ -41,9 +51,8 @@ class RemoteConfigService {
           updateMap[Platform.isAndroid ? 'android' : 'ios'];
       log('updateMap --> $updateMap');
       String whatsNew = appUpdateMap['whats_new'];
-      String updateLink = Platform.isAndroid
-          ? Apis.playStoreLink
-          : Apis.appStoreLink;
+      String updateLink =
+          Platform.isAndroid ? Apis.playStoreLink : Apis.appStoreLink;
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
       String buildNumber = packageInfo.buildNumber;
@@ -53,17 +62,17 @@ class RemoteConfigService {
 
       if (remoteAppVersionInt > buildNumberInt) {
         return showAppDialog(
-            context,
-            title: 'New Update Available',
-            subtitle: whatsNew,
-            canPop: appUpdateMap['update_type'] == 'hard' ? false : true,
-            buttonText: 'Update Now',
-            showBackButton:
-                appUpdateMap['update_type'] == 'hard' ? false : true,
-            onTap: () async => await launchUrlString(updateLink,mode: LaunchMode.externalApplication),
-            backBtText: 'Later',
-            backOnTap: () => Get.back(),
-          );
+          context,
+          title: 'New Update Available',
+          subtitle: whatsNew,
+          canPop: appUpdateMap['update_type'] == 'hard' ? false : true,
+          buttonText: 'Update Now',
+          showBackButton: appUpdateMap['update_type'] == 'hard' ? false : true,
+          onTap: () async => await launchUrlString(updateLink,
+              mode: LaunchMode.externalApplication),
+          backBtText: 'Later',
+          backOnTap: () => Get.back(),
+        );
       }
     }
   }
@@ -102,7 +111,7 @@ Future showAppDialog(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 10),
-                 Txt(
+                Txt(
                   title,
                   fontSize: 20,
                   textAlign: TextAlign.center,
@@ -148,7 +157,7 @@ Future showAppDialog(
                             color: AppColors.Primary,
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child:Txt(
+                          child: Txt(
                             buttonText ?? '',
                             textColor: Colors.white,
                           ),
