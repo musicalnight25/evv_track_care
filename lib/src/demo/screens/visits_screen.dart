@@ -87,6 +87,8 @@ class _DemoScreenState extends State<DemoScreen> with AutomaticKeepAliveClientMi
       final visit = Provider.of<DemoProvider>(context, listen: false);
       visit.page = 1;
       visit.searchPage = 1;
+      visit.visitData.clear();
+      visit.allvisitData.clear();
       visit.setSelectedDate(DateTime.now());
       await Provider.of<DemoProvider>(context, listen: false).visitsApi(context, id: widget.params.id.toString());
       await Provider.of<DemoProvider>(context, listen: false).clientDetailsApi(context,clientId: widget.params.client?.id.toString(),companyId: widget.params.client?.companyId.toString());
@@ -849,6 +851,7 @@ class _DemoScreenState extends State<DemoScreen> with AutomaticKeepAliveClientMi
                           //showDateTimeBottomSheet(context, visit);
                           log('temps datta -->${widget.params.client!.id.toString()}');
                           log('temps datta -->${widget.params.client!.toJson()}');
+                          showLoader(context);
                           await visit.clientVisitsAddApi(
                             context,
                             companyId: widget.params.client?.companyId?.toInt(),
@@ -857,6 +860,7 @@ class _DemoScreenState extends State<DemoScreen> with AutomaticKeepAliveClientMi
 
                             // endTime: endTime,
                           );
+                          hideLoader();
                           Navigator.pop(context);
                         },
                         child: Padding(

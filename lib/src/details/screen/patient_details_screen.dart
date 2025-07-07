@@ -381,6 +381,13 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> with Automa
                         textColor: AppColors.black,
                         ),
                         VGap(0.3.h),
+                        if(patient.startTime != null)
+                        Txt(
+                            textAlign: TextAlign.start,
+                            "${Formatter.stringFromTimeString(patient.startTime.toString().toString(),)}",
+                            fontSize: 16,
+                            textColor: AppColors.hint_text_color_dark,
+                            fontWeight: FontWeight.w700),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -394,12 +401,33 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> with Automa
                             /*  Txt(clientDetails?.visitTime?.firstOrNull?.scheduleStartTime == null ? "--" :"${Formatter.stringDateFromString(clientDetails?.visitTime?.firstOrNull?.scheduleStartTime.toString(), reqFormat: "yyyy-MM-dd HH:mm:ss", resFormat: "HH:mm:a")} - ${Formatter.stringDateFromString(clientDetails?.visitTime?.firstOrNull?.scheduleEndTime.toString(), reqFormat: "yyyy-MM-dd HH:mm:ss", resFormat: "HH:mm:a")}",
                                   fontSize: 1.7.t, textColor: AppColors.hint_text_color_dark, fontWeight: FontWeight.w400),*/
                             Txt(
+                                textAlign: TextAlign.center,
                                 patient.startTime == null
                                     ? "--"
                                     : "${Formatter.stringDateFromString(patient.startTime.toString().toString(), reqFormat: "yyyy-MM-dd HH:mm:ss", resFormat: "hh:mm:a")} ${patient.endTime == null ? "-" : Formatter.stringDateFromString(patient.endTime.toString().toString(), reqFormat: "yyyy-MM-dd HH:mm:ss", resFormat: "hh:mm:a")}",
-                                fontSize: 12,
+                                fontSize: 16,
                                 textColor: AppColors.hint_text_color_dark,
-                                fontWeight: FontWeight.w400),
+                                fontWeight: FontWeight.w700),
+                          ],
+                        ),
+                        VGap(0.3.h),
+                        if(patient.startTime != null && patient.endTime != null)
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.watch_later_outlined,
+                              color: AppColors.hint_text_color_dark,
+                              size: 2.2.h,
+                            ),
+                            HGap(1.w),
+                            Txt(
+                                textAlign: TextAlign.start,
+                                getDateToTotalTime(inTimeStr: patient.startTime.toString(),outTimeStr: patient.endTime.toString()),
+                                fontSize: 16,
+                                textColor: AppColors.hint_text_color_dark,
+                                fontWeight: FontWeight.w700),
                           ],
                         ),
                         VGap(2.h),
@@ -797,6 +825,58 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> with Automa
                           ),
                           const Spacer(),
                         ],
+                        if(patient.address != null)...[
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 24),
+                            padding: const EdgeInsets.symmetric(vertical: 14,horizontal: 10),
+                            decoration: BoxDecoration(
+                              color: AppColors.bgColor,
+                              borderRadius: BorderRadius.circular(9),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 58,
+                                  width: 58,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                      border: Border.all(
+                                          width: 1, color: const Color(0xffF1F1FF)),
+                                      color: const Color(0xffF1F1FF) //Color(0xffF1F1FF),
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(2.h),
+                                    child: SvgImage(
+                                      SvgIcons.location,
+                                      fit: BoxFit.fitHeight,
+                                      size: 0.5.h,
+                                    ),
+                                  ),
+                                ),
+                                HGap(2.w),
+                                // const Txt(
+                                //   "Address : ",
+                                //   fontSize: 15,
+                                //   fontWeight: FontWeight.w700,
+                                // ),
+                                Expanded(
+                                  child: Txt(
+                                    patient.address ?? "",
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                    textColor: Colors.black,
+                                    maxLines: 2,
+                                    overFlow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                SizedBox(width: 5.w),
+                              ],
+                            ),
+                          ),
+                          VGap(2.h),
+                        ],
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.6.h),
                           child: Row(
@@ -820,10 +900,12 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> with Automa
                                         log('isCheckLocation: $isCheckLocation');
                                         if(isCheckLocation){
                                          if(patient.taskData.isEmpty){
+                                           showLoader(context);
                                            await visit.visitTaskAddApi(context,
                                                clientId: widget.params.clientId,
                                                companyId: widget.params.companyId.toString(),
                                                visitId: widget.params.id);
+                                           hideLoader();
                                          }
                                          if (patient.startTime == null) {
                                            Map<String, dynamic> location = await getCurrentLocation();
@@ -909,8 +991,9 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> with Automa
                                       if (patient.statusData) {
                                         showToast("Visit Already Completed");
                                       } else {
+                                        showLoader(context);
                                         await visit.taskListApi(context, companyId: widget.params.companyId, clientId: widget.params.clientId);
-
+                                        hideLoader();
                                         await BottomSheetUtils.showTaskListSheet(context, visit.taskNames, widget.params.clientId, widget.params.companyId, widget.params.id);
                                       }
                                     },
@@ -966,6 +1049,21 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> with Automa
         ),
       ),
     );
+  }
+
+ String getDateToTotalTime({String? inTimeStr,String? outTimeStr}){
+
+    DateTime inTime = DateTime.parse(inTimeStr!);
+    DateTime outTime = DateTime.parse(outTimeStr!);
+
+    Duration diff = outTime.difference(inTime);
+
+    int hours = diff.inHours;
+    int minutes = diff.inMinutes.remainder(60);
+
+    log("${hours}h:${minutes}min");
+    String totalTime = "${hours}h:${minutes}min";
+    return totalTime;
   }
 
   // closeAllBox(){
@@ -1204,6 +1302,7 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> with Automa
                                 // final startTime = DateFormat('yyyy-MM-dd HH:mm').format(startDateTime!);
 
                                 final endTime = DateFormat('yyyy-MM-dd HH:mm').format(startDateTime!);
+                                showLoader(context);
                                 await Provider.of<DemoProvider>(context,
                                         listen: false)
                                     .visitEndApi(
@@ -1476,6 +1575,7 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> with Automa
 
                         final startTime = DateFormat('yyyy-MM-dd HH:mm').format(startDateTime);
                         // final endTime = DateFormat('yyyy-MM-dd HH:mm').format(endDateTime!);
+                        showLoader(context);
                         await Provider.of<DemoProvider>(context, listen: false)
                             .visitStartApi(
                                 visitId: widget.params.id,
@@ -1759,12 +1859,15 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> with Automa
                             if (sign == null) {
                               showToast("Your signature is required");
                             } else {
+                              showLoader(context);
                               await visit.addSignatureApi(context, widget.params.clientId, visitId: widget.params.id, signature: sign,endTime: widget.params.endTime);
 
                               _signatureController.clear();
                             }
                           }else{
-                            if (_audioFilePath.isNotEmpty) {
+                            if (_audioFilePath.isNotEmpty)
+                            {
+                              showLoader(context);
                               await visit.sentAudioFileApi(visitId: widget.params.id, audioFile: File(_audioFilePath));
                             } else {
                               showToast("Please record audio");

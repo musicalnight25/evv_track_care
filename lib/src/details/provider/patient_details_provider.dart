@@ -40,6 +40,9 @@ class PatientDetailsProvider extends ChangeNotifier {
   DateTime? _startTime ;
   DateTime? get startTime => _startTime;
 
+  String? _address ;
+  String? get address => _address;
+
   DateTime? _endTime ;
   DateTime? get endTime => _endTime;
 
@@ -89,6 +92,9 @@ class PatientDetailsProvider extends ChangeNotifier {
         }else{
           _endTime = null;
         }
+        if(res.visit!.address != null){
+          _address = res.visit!.address;
+        }
 
         notifyListeners();
       } else {
@@ -128,9 +134,16 @@ class PatientDetailsProvider extends ChangeNotifier {
         }
 
         //await Provider.of<DemoProvider>(context, listen: false).visitEndApi(visitId: visitId,endTime: endDate);
-        await Provider.of<DemoProvider>(context, listen: false).visitsApi(context, id: clientId.toString());
-        final currTime = Formatter.stringFromDateTime(DateTime.now(), format: "yyyy-MM-dd");
-        await Provider.of<DemoProvider>(context, listen: false).getDataDateWise(currTime.toString());
+        final visit = Provider.of<DemoProvider>(context, listen: false);
+        visit.page = 1;
+        visit.visitData.clear();
+        visit.allvisitData.clear();
+        visit.setSelectedDate(DateTime.now());
+        await Provider.of<DemoProvider>(context, listen: false).visitsApi(context, id: clientId.toString(),isNewVisitAdd: true);
+        notifyListeners();
+        // await Provider.of<DemoProvider>(context, listen: false).visitsApi(context, id: clientId.toString());
+        // final currTime = Formatter.stringFromDateTime(DateTime.now(), format: "yyyy-MM-dd");
+        // await Provider.of<DemoProvider>(context, listen: false).getDataDateWise(currTime.toString());
 
         await context.pushNamed(const ThanksRoute());
 

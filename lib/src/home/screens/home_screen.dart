@@ -72,7 +72,6 @@ class _HomeScreenState extends State<HomeScreen>
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((p) async {
-      checkRemoteConfig(context);
       showHomeLoader(true);
       showLoader(context);
       final home = Provider.of<HomeProvider>(context, listen: false);
@@ -95,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen>
           home.notifyListeners();
         }
       });
-
+      checkRemoteConfig(context);
       //    await Provider.of<HomeProvider>(context, listen: false).offlineFetchApi();
     });
   }

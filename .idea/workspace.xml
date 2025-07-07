@@ -5,42 +5,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bd628afc-c217-4c8b-975c-83814f0b7734" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/android/key.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.gradle/8.9/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/8.9/checksums/checksums.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.gradle/8.9/checksums/md5-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/8.9/checksums/md5-checksums.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.gradle/8.9/checksums/sha1-checksums.bin" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/8.9/checksums/sha1-checksums.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/.gradle/8.9/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/8.9/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/.gradle/8.9/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/8.9/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/.gradle/8.9/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/8.9/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/.gradle/8.9/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/8.9/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/.gradle/8.9/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/8.9/fileHashes/resourceHashesCache.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/android/.gradle/file-system.probe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/healthcare.jks" beforeDir="false" afterPath="$PROJECT_DIR$/android/key/healthcare.jks" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/audio/song1.mp3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/svg_icons/showering.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/local.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ios/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Runner.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Runner/GoogleService-Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Runner/GoogleService-Info.plist" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/core/constants/api_constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/constants/api_constants.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/core/data/models/requests/company_details_reqs/company_details_reqs.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/data/models/requests/company_details_reqs/company_details_reqs.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/core/data/models/requests/visits_reqs/visits_request.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/data/models/requests/visits_reqs/visits_request.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/core/data/models/response/api_response/client_visit_add_response.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/data/models/response/api_response/client_visit_add_response.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/core/data/models/response/client_visits_response.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/data/models/response/client_visits_response.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/core/data/repos/home_repos/home_repo_impl.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/data/repos/home_repos/home_repo_impl.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/core/data/repos/visits_repos/visits_repo.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/data/repos/visits_repos/visits_repo.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/core/data/repos/visits_repos/visits_repo_impl.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/data/repos/visits_repos/visits_repo_impl.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/firebase_options.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/firebase_options.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/core/helper/remote_config_helper.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/helper/remote_config_helper.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/core/utils/bottom_sheet_utils.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/core/utils/bottom_sheet_utils.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/auth/screens/select_agency_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/auth/screens/select_agency_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/src/demo/providers/visit_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/demo/providers/visit_provider.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/src/demo/screens/visits_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/demo/screens/visits_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/demo/widgets/visits_info_widget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/demo/widgets/visits_info_widget.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/src/home/providers/home_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/home/providers/home_provider.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/details/provider/patient_details_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/details/provider/patient_details_provider.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/src/details/screen/patient_details_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/details/screen/patient_details_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/src/home/screens/home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/src/home/screens/home_screen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -87,7 +71,7 @@
     "dart.analysis.tool.window.visible": "false",
     "io.flutter.reload.alreadyRun": "true",
     "last_opened_file_path": "/Users/keval/Documents/GitHub/evv_track_care/ios/Runner",
-    "memory.settings.postsync.last.time.stamp": "1750756696923",
+    "memory.settings.postsync.last.time.stamp": "1751856233579",
     "settings.editor.selected.configurable": "dev.polek.adbwifi.settings.AdbWifiConfigurable",
     "show.migrate.to.gradle.popup": "false"
   }

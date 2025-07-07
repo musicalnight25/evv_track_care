@@ -15,6 +15,7 @@ import 'package:healthcare/core/data/models/response/api_response/client_visit_a
 import 'package:healthcare/core/data/models/response/api_response/send_signature_response.dart';
 import 'package:healthcare/core/data/repos/visits_repos/visits_repo.dart';
 import 'package:healthcare/core/helper/database/database_helper.dart';
+import 'package:healthcare/core/helper/loader.dart';
 import 'package:healthcare/core/network/network_service.dart';
 import 'package:healthcare/src/details/provider/patient_details_provider.dart';
 import 'package:healthcare/src/home/providers/home_provider.dart';
@@ -200,7 +201,7 @@ class DemoProvider extends ChangeNotifier {
   /// Visit Details Api
   ///
 
-  Future<bool> visitsApi(BuildContext context, {required String id, bool listen = true,bool isPageNavigation = false}) async {
+  Future<bool> visitsApi(BuildContext context, {required String id, bool listen = true,bool isPageNavigation = false,bool isNewVisitAdd = false}) async {
     bool isSuccess = false;
     // _visitData.clear();
     // _allvisitData.clear();
@@ -220,6 +221,10 @@ class DemoProvider extends ChangeNotifier {
         final res = await _visitsRepo.VisitsDetails(req);
         // isSuccess = res.first.companyId != null;
         if(res != null && res.visits != null && res.visits.isNotEmpty){
+          if(isNewVisitAdd){
+            _visitData.clear();
+            _allvisitData.clear();
+          }
           _visitData.addAll(res.visits);
           _allvisitData.addAll(res.visits.reversed.toList());
         }else{
@@ -434,6 +439,7 @@ class DemoProvider extends ChangeNotifier {
         );
         final res = await _visitsRepo.startVisit(req);
         isSuccess = res.companyId != null;
+        hideLoader();
       } else {
         // showSnackbarError("No Internet Connection");
 
@@ -468,6 +474,7 @@ class DemoProvider extends ChangeNotifier {
         );
         final res = await _visitsRepo.endVisit(req);
         isSuccess = res.companyId != null;
+        hideLoader();
       } else {
         // showSnackbarError("No Internet Connection");
 
@@ -537,8 +544,10 @@ class DemoProvider extends ChangeNotifier {
         await DatabaseHelper.instance.insertVisitData(req.toVisitModel());
       }
    //   await context.read<HomeProvider>().offlineFetchApi(getTaskLists: false, getServices: false, getVisitsOnlyFromClient: true);
-      await visitsApi(context, id: clientId.toString() ?? "2");
       _selectedDate = DateTime.now();
+      page = 1;
+      notifyListeners();
+      await visitsApi(context, id: clientId.toString() ?? "2",isNewVisitAdd: true);
       await getDataDateWise(currTime.toString());
     } on ServerException catch (e) {
       devlogError("ERROR - PROVIDER - SERVERE_EXCEPTION -> adminLogin:123 $e");
@@ -653,6 +662,7 @@ class DemoProvider extends ChangeNotifier {
 
     // showToast("${data.signatureFile}");
     showToast("Signature uploaded");
+    hideLoader();
     await Provider.of<PatientDetailsProvider>(context, listen: false).visitStatusApi(context, clientId, visitId: visitId, endDate: endTime);
     }
 
@@ -678,7 +688,7 @@ class DemoProvider extends ChangeNotifier {
 
     ApiResponse response = await _visitsRepo.sentAudio(userdata);
     SendSignatureResponse data = SendSignatureResponse.fromJson(response.response?.data);
-
+    hideLoader();
     showToast("Audio uploaded");
     }
 }

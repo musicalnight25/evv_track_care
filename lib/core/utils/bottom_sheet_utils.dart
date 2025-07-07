@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:healthcare/config/routes/app_router/route_extensions.dart';
+import 'package:healthcare/core/helper/loader.dart';
 import 'package:healthcare/core/utils/gap.dart';
 import 'package:healthcare/core/utils/size_config.dart';
 import 'package:healthcare/core/utils/text.dart';

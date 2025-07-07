@@ -57,6 +57,7 @@ class Visit {
   final DateTime? updatedAt;
   final String? signatureFile;
   final String? audioFile;
+  final String? address;
 
   Visit({
     this.id,
@@ -99,6 +100,7 @@ class Visit {
     this.updatedAt,
     this.signatureFile,
     this.audioFile,
+    this.address,
   });
 
   factory Visit.fromJson(Map<String, dynamic> json) {
@@ -143,6 +145,7 @@ class Visit {
       updatedAt: DateTime.parse(json['updated_at']),
       signatureFile: json['signature_file'] ?? "",
       audioFile: json['audio_file'] ?? "",
+      address: json['address'] ?? "",
     );
   }
 
@@ -188,6 +191,7 @@ class Visit {
       'updated_at': updatedAt?.toIso8601String(),
       'signature_file': signatureFile,
       'audio_file': audioFile,
+      'address': address,
     };
   }
 }

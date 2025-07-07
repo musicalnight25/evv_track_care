@@ -13,12 +13,16 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import '../constants/api_constants.dart';
 
+bool isSoftUpdateOpen = false;
+
 Future checkRemoteConfig(BuildContext context) async {
   await Future.delayed(
     Duration.zero,
     () async {
-      await RemoteConfigService.instance.setupRemoteConfig();
-      RemoteConfigService.instance.getAppUpdateInfo(context);
+      if(!isSoftUpdateOpen){
+        await RemoteConfigService.instance.setupRemoteConfig();
+        RemoteConfigService.instance.getAppUpdateInfo(context);
+      }
     },
   );
 }
@@ -71,7 +75,10 @@ class RemoteConfigService {
           onTap: () async => await launchUrlString(updateLink,
               mode: LaunchMode.externalApplication),
           backBtText: 'Later',
-          backOnTap: () => Get.back(),
+          backOnTap: () {
+            isSoftUpdateOpen = true;
+            Get.back();
+          },
         );
       }
     }
@@ -98,6 +105,11 @@ Future showAppDialog(
     builder: (context) {
       return PopScope(
         canPop: canPop,
+        onPopInvokedWithResult: (didPop, result) {
+          if(canPop){
+            isSoftUpdateOpen = true;
+          }
+        },
         child: Dialog(
           insetPadding: const EdgeInsets.all(20),
           child: Container(
