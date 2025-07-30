@@ -5,6 +5,7 @@ plugins {
     // END: FlutterFire Configuration
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
+    id "org.jetbrains.kotlin.android"
 }
 
 def localProperties = new Properties()
@@ -41,17 +42,17 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace "com.imbu.caretrack"
-    compileSdk 34 //flutter.compileSdkVersion
-    ndkVersion = "25.1.8937393"
+    compileSdk 35 //flutter.compileSdkVersion
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         coreLibraryDesugaringEnabled true
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
-kotlinOptions {
-        jvmTarget = '17'
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 
     sourceSets {
@@ -64,9 +65,10 @@ kotlinOptions {
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 24 //flutter.minSdkVersion
-        targetSdkVersion 34// flutter.targetSdkVersion
-        versionCode 13 //flutterVersionCode.toInteger()
+        targetSdkVersion 35// flutter.targetSdkVersion
+        versionCode 15 //flutterVersionCode.toInteger()
         versionName "1.0.1" //flutterVersionName
+        multiDexEnabled true
     }
 
     signingConfigs {
@@ -95,5 +97,6 @@ flutter {
 }
 
 dependencies {
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.2")
 }

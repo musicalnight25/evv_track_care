@@ -716,164 +716,195 @@ class _DemoScreenState extends State<DemoScreen> with AutomaticKeepAliveClientMi
     DateTime? endDateTime;
 
     await showModalBottomSheet(
+      useSafeArea: true,
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(height: 20),
-                  Txt(
-                    "Select Service",
-                    fontSize: 2.2.t,
-                    textAlign: TextAlign.center,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  const SizedBox(height: 16),
-                  ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: visit.serviceList.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            visit.selectService(index, visit.serviceList[index]);
-                            setState(() {});
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.w),
-                            child: Container(
-                              child: Row(
-                                children: [
-                                  Container(
-                                      width: 2.6.h,
-                                      height: 2.6.h,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(1.3.h),
-                                        border: Border.all(color: Colors.black),
-                                        color: AppColors.white,
-                                      ),
-                                      child: index == visit.selectedIndex
-                                          ? Padding(
-                                              padding: const EdgeInsets.all(4.0),
-                                              child: Container(
-                                                width: 1.2.h,
-                                                height: 1.2.h,
-                                                decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(0.6.h),
-                                                  color: AppColors.Primary,
-                                                ),
-                                              ),
-                                            )
-                                          : const SizedBox()),
-                                  SizedBox(
-                                    width: 3.w,
-                                  ),
-                                  Txt(
-                                    visit.serviceList[index].name ?? "",
-                                    fontSize: 2.2.t,
-                                    fontWeight: FontWeight.w400,
-                                    textColor: Colors.black,
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      }),
+        return SafeArea(
+          child: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        SizedBox(width: 8.w,),
+                        Txt(
+                          "Select Service",
+                          fontSize: 2.2.t,
+                          textAlign: TextAlign.center,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        Spacer(),
+                        ElevatedButton(
+                          onPressed: () async {
+                            //showDateTimeBottomSheet(context, visit);
+                            log('temps datta -->${widget.params.client!.id.toString()}');
+                            log('temps datta -->${widget.params.client!.toJson()}');
+                            showLoader(context);
+                            await visit.clientVisitsAddApi(
+                              context,
+                              companyId: widget.params.client?.companyId?.toInt(),
+                              sequenceID: widget.params.client?.sequenceId,
+                              clientId: int.parse(widget.params.client!.id.toString()),
 
-                /*  ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: visit.payerList.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            visit.selectClientPayerInfo(index, visit.payerList[index]);
-                            setState(() {});
+                              // endTime: endTime,
+                            );
+                            hideLoader();
+                            Navigator.pop(context);
                           },
                           child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.w),
-                            child: Container(
-                              child: Row(
-                                children: [
-                                  Container(
-                                      width: 2.6.h,
-                                      height: 2.6.h,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(1.3.h),
-                                        border: Border.all(color: Colors.black),
-                                        color: AppColors.white,
-                                      ),
-                                      child: index == visit.selectedIndex
-                                          ? Padding(
-                                              padding: const EdgeInsets.all(4.0),
-                                              child: Container(
-                                                width: 1.2.h,
-                                                height: 1.2.h,
-                                                decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(0.6.h),
-                                                  color: AppColors.Primary,
+                            padding: EdgeInsets.all(1.h),
+                            child: const Text("Select Service"),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: visit.serviceList.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              visit.selectService(index, visit.serviceList[index]);
+                              setState(() {});
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.w),
+                              child: Container(
+                                child: Row(
+                                  children: [
+                                    Container(
+                                        width: 2.6.h,
+                                        height: 2.6.h,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(1.3.h),
+                                          border: Border.all(color: Colors.black),
+                                          color: AppColors.white,
+                                        ),
+                                        child: index == visit.selectedIndex
+                                            ? Padding(
+                                                padding: const EdgeInsets.all(4.0),
+                                                child: Container(
+                                                  width: 1.2.h,
+                                                  height: 1.2.h,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(0.6.h),
+                                                    color: AppColors.Primary,
+                                                  ),
                                                 ),
-                                              ),
-                                            )
-                                          : const SizedBox()),
-                                  SizedBox(
-                                    width: 3.w,
-                                  ),
-                                  Flexible(
-                                    child: Txt(
-                                      visit.payerList[index].payerID ?? "",
+                                              )
+                                            : const SizedBox()),
+                                    SizedBox(
+                                      width: 3.w,
+                                    ),
+                                    Txt(
+                                      visit.serviceList[index].name ?? "",
                                       fontSize: 2.2.t,
                                       fontWeight: FontWeight.w400,
                                       textColor: Colors.black,
-                                      overFlow: TextOverflow.ellipsis,
-                                      maxLines: 2,
-                                    ),
-                                  )
-                                ],
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      }),*/
-
-                  SizedBox(
-                    height: 1.h,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () async {
-                          //showDateTimeBottomSheet(context, visit);
-                          log('temps datta -->${widget.params.client!.id.toString()}');
-                          log('temps datta -->${widget.params.client!.toJson()}');
-                          showLoader(context);
-                          await visit.clientVisitsAddApi(
-                            context,
-                            companyId: widget.params.client?.companyId?.toInt(),
-                            sequenceID: widget.params.client?.sequenceId,
-                            clientId: int.parse(widget.params.client!.id.toString()),
-
-                            // endTime: endTime,
                           );
-                          hideLoader();
-                          Navigator.pop(context);
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.all(1.h),
-                          child: const Text("Select Service"),
+                        }),
+
+                  /*  ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: visit.payerList.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              visit.selectClientPayerInfo(index, visit.payerList[index]);
+                              setState(() {});
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.w),
+                              child: Container(
+                                child: Row(
+                                  children: [
+                                    Container(
+                                        width: 2.6.h,
+                                        height: 2.6.h,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(1.3.h),
+                                          border: Border.all(color: Colors.black),
+                                          color: AppColors.white,
+                                        ),
+                                        child: index == visit.selectedIndex
+                                            ? Padding(
+                                                padding: const EdgeInsets.all(4.0),
+                                                child: Container(
+                                                  width: 1.2.h,
+                                                  height: 1.2.h,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(0.6.h),
+                                                    color: AppColors.Primary,
+                                                  ),
+                                                ),
+                                              )
+                                            : const SizedBox()),
+                                    SizedBox(
+                                      width: 3.w,
+                                    ),
+                                    Flexible(
+                                      child: Txt(
+                                        visit.payerList[index].payerID ?? "",
+                                        fontSize: 2.2.t,
+                                        fontWeight: FontWeight.w400,
+                                        textColor: Colors.black,
+                                        overFlow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        }),*/
+
+                    SizedBox(
+                      height: 1.h,
+                    ),
+                    /*Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () async {
+                            //showDateTimeBottomSheet(context, visit);
+                            log('temps datta -->${widget.params.client!.id.toString()}');
+                            log('temps datta -->${widget.params.client!.toJson()}');
+                            showLoader(context);
+                            await visit.clientVisitsAddApi(
+                              context,
+                              companyId: widget.params.client?.companyId?.toInt(),
+                              sequenceID: widget.params.client?.sequenceId,
+                              clientId: int.parse(widget.params.client!.id.toString()),
+
+                              // endTime: endTime,
+                            );
+                            hideLoader();
+                            Navigator.pop(context);
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.all(1.h),
+                            child: const Text("Select Service"),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          },
+                      ],
+                    ),*/
+                  ],
+                ),
+              );
+            },
+          ),
         );
       },
     );

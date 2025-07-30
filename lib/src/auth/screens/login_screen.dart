@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:healthcare/core/common/widgets/app_image_assets.dart';
+import 'package:healthcare/core/common/widgets/app_version_widget.dart';
 import 'package:healthcare/core/common/widgets/custom_elevated_button.dart';
 import 'package:healthcare/core/common/widgets/custom_text_field.dart';
 import 'package:healthcare/core/constants/app_constants.dart';
@@ -262,7 +263,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               )),
                         ),
-                      )
+                      ),
+                      const SizedBox(height: 20),
+                      const Center(child: AppVersionWidget()),
                     ],
                   ),
                 );
