@@ -1,0 +1,2 @@
+/Users/keval/Documents/GitHub/evv_track_care/android/app/.cxx/RelWithDebInfo/k5f221g4/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/keval/Documents/GitHub/evv_track_care/android/app/.cxx/RelWithDebInfo/k5f221g4/arm64-v8a/CMakeFiles/rebuild_cache.dir

@@ -911,8 +911,13 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> with Automa
                                            Map<String, dynamic> location = await getCurrentLocation();
                                            showDateTimeBottomSheetstart(context,location);
                                          } else if (patient.endTime == null) {
-                                           Map<String, dynamic> location = await getCurrentLocation();
-                                           showDateTimeBottomSheet(context, patient.startTime,location);
+                                           final difference = DateTime.now().difference(patient.startTime!).inMinutes;
+                                           if (difference < 15) {
+                                             showSnackbarError("Oops! The session needs to be at least 15 minutes before checkout. Try again later.");
+                                           }else{
+                                             Map<String, dynamic> location = await getCurrentLocation();
+                                             showDateTimeBottomSheet(context, patient.startTime,location);
+                                           }
                                          } else if (patient.startTime != null && patient.endTime != null) {
                                            _signatureController.clear();
                                            isSelectedSingAudio = 0;

@@ -1,0 +1,2 @@
+/Users/keval/Downloads/evv-caretrack-app/android/app/.cxx/RelWithDebInfo/3j6m7229/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/keval/Downloads/evv-caretrack-app/android/app/.cxx/RelWithDebInfo/3j6m7229/armeabi-v7a/CMakeFiles/rebuild_cache.dir
