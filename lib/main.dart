@@ -25,6 +25,7 @@ import 'src/splash/providers/splash_provider.dart';
 
 /*
 ann.muller@swiftdata.test
+ann.muller@swiftdata.test
 
 allenbaiyee@me.com
 1qRKB8gtb
@@ -35,10 +36,14 @@ Ul1N12PrZ
 alicebaiyee@hotmail.com
 YpJT8xYtA
 
+allenbaiyee@gmail.com
 #iMbu2017!
 
 clients/visits/search
 clients/search
+
+hard
+soft
 
 */
 

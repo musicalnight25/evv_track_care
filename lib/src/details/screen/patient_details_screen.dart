@@ -912,8 +912,8 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> with Automa
                                            showDateTimeBottomSheetstart(context,location);
                                          } else if (patient.endTime == null) {
                                            final difference = DateTime.now().difference(patient.startTime!).inMinutes;
-                                           if (difference < 15) {
-                                             showSnackbarError("Oops! The session needs to be at least 15 minutes before checkout. Try again later.");
+                                           if (difference < 10) {
+                                             showSnackbarError("Oops! The session needs to be at least 10 minutes before checkout. Try again later.");
                                            }else{
                                              Map<String, dynamic> location = await getCurrentLocation();
                                              showDateTimeBottomSheet(context, patient.startTime,location);
