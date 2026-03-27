@@ -36,7 +36,7 @@ abstract interface class VisitsRepo {
   Future<ApiResponse> sentAudio(FormData? userData);
   Future<VisitStatusResponse> VisitsStatus(VisitsStatusRequest _);
   Future<ServiceListReaponse> getService(ServiceListRequest _);
-  Future<ClientVisitAddResponse> startVisit(StartVisitRequest _);
+  Future<ClientVisitAddResponse?> startVisit(StartVisitRequest _);
   Future<ClientVisitAddResponse> endVisit(CompleteVisitReq _);
 
 }

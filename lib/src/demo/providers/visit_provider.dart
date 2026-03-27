@@ -438,7 +438,9 @@ class DemoProvider extends ChangeNotifier {
         address: location?['address'] ?? "",
         );
         final res = await _visitsRepo.startVisit(req);
-        isSuccess = res.companyId != null;
+        if(res != null){
+          isSuccess = res.companyId != null;
+        }
         hideLoader();
       } else {
         // showSnackbarError("No Internet Connection");

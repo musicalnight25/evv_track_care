@@ -34,6 +34,8 @@ class RemoteConfigService {
       RemoteConfigService._privateConstructor();
   final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
 
+  int nearMeDistance = 20;
+
   Future<void> setupRemoteConfig() async {
     try {
       await remoteConfig.setConfigSettings(RemoteConfigSettings(
@@ -55,6 +57,7 @@ class RemoteConfigService {
           updateMap[Platform.isAndroid ? 'android' : 'ios'];
       log('updateMap --> $updateMap');
       String whatsNew = appUpdateMap['whats_new'];
+      nearMeDistance = updateMap['near_me_distance'];
       String updateLink =
           Platform.isAndroid ? Apis.playStoreLink : Apis.appStoreLink;
       PackageInfo packageInfo = await PackageInfo.fromPlatform();

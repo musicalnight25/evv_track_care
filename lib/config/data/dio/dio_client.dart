@@ -1,5 +1,13 @@
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart' hide Response;
+import 'package:healthcare/core/common/widgets/custom_elevated_button.dart';
 import 'package:healthcare/core/constants/app_constants.dart';
 import 'package:dio/dio.dart';
+import 'package:healthcare/core/constants/color_constants.dart';
+import 'package:healthcare/core/utils/text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/helper/api_error_handler.dart';
@@ -100,6 +108,10 @@ class DioClient {
       devlog("Token::$_token");
       if (response.statusCode! >= 200 && response.statusCode! < 300) {
         return response;
+      }else if(response.statusCode == 403){
+        log('response.statusCode == 403');
+        return response;
+        // throw DioException.badResponse(statusCode: response.statusCode ?? 401, requestOptions: response.requestOptions, response: response);
       } else {
         throw DioException.badResponse(statusCode: response.statusCode ?? 401, requestOptions: response.requestOptions, response: response);
       }

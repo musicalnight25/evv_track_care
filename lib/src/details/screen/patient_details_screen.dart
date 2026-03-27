@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:audio_session/audio_session.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_sound/public/flutter_sound_player.dart';
 import 'package:flutter_sound/public/flutter_sound_recorder.dart';
@@ -912,7 +913,7 @@ class _PatientDetailsScreenState extends State<PatientDetailsScreen> with Automa
                                            showDateTimeBottomSheetstart(context,location);
                                          } else if (patient.endTime == null) {
                                            final difference = DateTime.now().difference(patient.startTime!).inMinutes;
-                                           if (difference < 10) {
+                                           if (difference < (kDebugMode ? 0 : 10)) {
                                              showSnackbarError("Oops! The session needs to be at least 10 minutes before checkout. Try again later.");
                                            }else{
                                              Map<String, dynamic> location = await getCurrentLocation();
